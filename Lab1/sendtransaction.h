@@ -4,12 +4,15 @@
 #include <QObject>
 #include <QUdpSocket>
 #include <QVector>
+#include <QSharedPointer>
 
 struct Message;
 class QByteArray;
 class QUdpSocket;
 class QHostAddress;
 class QFile;
+
+typedef QSharedPointer<QFile> FilePtr;
 
 class SendTransaction : public QObject
 {
@@ -20,7 +23,7 @@ public:
                              int MTU = 512,
                              int mex_retransmissions = 5,
                              QObject *parent = 0);
-    void Go(const QHostAddress& addr, quint16 port, QFile* file);
+    void Go(const QHostAddress& addr, quint16 port, FilePtr file);
 
 signals:
     void StartSending();
@@ -32,6 +35,7 @@ private:
     void SendMessage(quint32 state, const QByteArray& data = QByteArray());
     bool TransmitMessage(quint32 state, const QByteArray& data = QByteArray());
     bool ReceiveMessage(Message& message);
+    void MakeFileData(QByteArray& file_data);
 
 private slots:
     void RequestId();
@@ -45,15 +49,15 @@ private:
     QUdpSocket socket_;
     QHostAddress addr_;
     quint16 port_;
-    QFile* file_;
+    FilePtr file_;
     quint32 seq_;
     quint32 id_;
     int timeout_;
     int data_size_;
     int max_retransmissions_;
     QByteArray current_block_;
-    quint32 bytes_sent_;
-    quint32 bytes_total_;
+    quint64 bytes_sent_;
+    quint64 bytes_total_;
 };
 
 #endif // SENDTRANSACTION_H

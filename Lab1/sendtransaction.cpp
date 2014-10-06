@@ -25,12 +25,12 @@ SendTransaction::SendTransaction(int timeout,
             sizeof(Message::seq);
 }
 
-void SendTransaction::Go(const QHostAddress& addr, quint16 port, QFile* file)
+void SendTransaction::Go(const QHostAddress& addr, quint16 port, FilePtr file)
 {
     addr_ = addr;
     port_ = port;
-    file->setParent(this);
     file_ = file;
+    bytes_total_ = file_->size();
     socket_.bind();
     seq_ = 0;
     id_ = 0;
@@ -77,11 +77,19 @@ bool SendTransaction::ReceiveMessage(Message& message)
     return false;
 }
 
+void SendTransaction::MakeFileData(QByteArray& file_data)
+{
+    QDataStream stream(&file_data, QIODevice::WriteOnly);
+    stream << file_->fileName() << bytes_total_;
+}
+
 void SendTransaction::RequestId()
 {
     connect(&socket_, SIGNAL(readyRead()), this, SLOT(IdReceived()));
 
-    if (!TransmitMessage(State::Request::REQ_ID, file_->fileName().toUtf8()))
+    QByteArray fileData;
+    MakeFileData(fileData);
+    if (!TransmitMessage(State::Request::REQ_ID, fileData))
     {
         disconnect(&socket_, SIGNAL(readyRead()), 0, 0);
         emit TransmissionFailed(State::Error::RETRANSMISSION_FAILED);
@@ -93,21 +101,26 @@ void SendTransaction::IdReceived()
     disconnect(&socket_, SIGNAL(readyRead()), 0, 0);
 
     Message msg;
-    if (!ReceiveMessage(msg))
+    if (!ReceiveMessage(msg) || msg.state != State::Response::RESP_ID)
     {
-        RequestId();
+        emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
         return;
     }
+    id_ = msg.id;
 
     if (!file_->isOpen())
     {
         file_->open(QIODevice::ReadOnly);
     }
-
-    emit StartSending();
-    bytes_total_ = file_->size();
+    else if (!file_->isReadable())
+    {
+        file_->close();
+        file_->open(QIODevice::ReadOnly);
+    }
     bytes_sent_ = 0;
     current_block_ = file_->read(data_size_);
+
+    emit StartSending();
     SendData();
 }
 
@@ -159,7 +172,7 @@ void SendTransaction::FinishReceived()
     Message msg;
     if (!ReceiveMessage(msg) || msg.state != State::Response::RECV_FINISH)
     {
-        emit TransmissionFailed(State::Error::RETRANSMISSION_FAILED);
+        emit TransmissionFailed(State::Error::FINISH_FAILED);
     }
 
     emit FinishSending();

@@ -24,6 +24,8 @@ const quint32 RECV_FINISH = 7;
 namespace Error
 {
 const quint32 RETRANSMISSION_FAILED = 2;
+const quint32 ID_RECEIVING_FAILED = 5;
+const quint32 FINISH_FAILED = 8;
 }
 }
 

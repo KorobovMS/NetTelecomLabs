@@ -175,5 +175,6 @@ void SendTransaction::FinishReceived()
         emit TransmissionFailed(State::Error::FINISH_FAILED);
     }
 
+    socket_.close();
     emit FinishSending();
 }

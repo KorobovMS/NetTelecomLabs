@@ -15,8 +15,12 @@ SendTransaction::SendTransaction(int timeout,
       timeout_(timeout),
       max_retransmissions_(max_retransmissions)
 {
+    // For explanation see "Serializing Qt Data Types" in docs
+    typedef quint32 ByteArrayLengthType;
+
     data_size_ = MTU -
-            sizeof(Message::data) -
+            sizeof(Message::state) -
+            sizeof(ByteArrayLengthType) -
             sizeof(Message::id) -
             sizeof(Message::seq);
 }

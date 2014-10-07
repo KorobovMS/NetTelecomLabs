@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include <QVector>
 #include <QSharedPointer>
 
 struct Message;

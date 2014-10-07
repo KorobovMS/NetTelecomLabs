@@ -144,7 +144,7 @@ bool SendTransaction::SendMessage(quint32 state, const QByteArray& data)
     QByteArray datagram;
     QDataStream stream(&datagram, QIODevice::ReadWrite);
     stream << Message(state, seq_, id_, data);
-    quint64 sent = socket_.writeDatagram(datagram, addr_, port_);
+    qint64 sent = socket_.writeDatagram(datagram, addr_, port_);
     return sent == datagram.size();
 }
 

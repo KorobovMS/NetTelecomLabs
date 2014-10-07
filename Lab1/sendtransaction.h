@@ -26,24 +26,22 @@ public:
     void Go(const QHostAddress& addr, quint16 port, FilePtr file);
 
 signals:
-    void StartSending();
-    void Progress(int sent, int total);
-    void FinishSending();
+    void TransmissionStarted();
+    void TransmissionProgress(int sent, int total);
+    void TransmissionFinished();
     void TransmissionFailed(quint32 error_code);
 
 private:
-    void SendMessage(quint32 state, const QByteArray& data = QByteArray());
+    void ProcessTransaction();
+    bool RequestId();
+    void PrepareFile();
+    bool SendFile();
+    bool FinishSending();
+
+    bool SendMessage(quint32 state, const QByteArray& data = QByteArray());
     bool TransmitMessage(quint32 state, const QByteArray& data = QByteArray());
     bool ReceiveMessage(Message& message);
     void MakeFileData(QByteArray& file_data);
-
-private slots:
-    void RequestId();
-    void IdReceived();
-    void SendData();
-    void DataReceived();
-    void SendFinished();
-    void FinishReceived();
 
 private:
     QUdpSocket socket_;
@@ -55,7 +53,6 @@ private:
     int timeout_;
     int data_size_;
     int max_retransmissions_;
-    QByteArray current_block_;
     quint64 bytes_sent_;
     quint64 bytes_total_;
 };

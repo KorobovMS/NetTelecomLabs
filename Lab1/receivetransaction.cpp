@@ -53,6 +53,7 @@ void ReceiveTransaction::ReceiveMessage( )
         else if( msg.state == State::Request::SEND_FINISH )
         {
             SendFinish( msg );
+            DelId( msg )
         }
     }
 }
@@ -76,7 +77,7 @@ void ReceiveTransaction::RegId( Message& msg )
     {
         quint32 ID = rand() % UINT_MAX;
         QMap< quint32, QString >::iterator p = file_for_id_.find( ID );
-        if( p != file_for_id_.end( ) )
+        if( p == file_for_id_.end( ) )
         {
             file_for_id_.insert( ID, fName );
             SendMessage( State::Response::RESP_ID, ID, msg.seq );
@@ -88,18 +89,23 @@ void ReceiveTransaction::RegId( Message& msg )
 void ReceiveTransaction::DelId( Message& msg )
 {
     QMap < quint32, QString >::iterator p = file_for_id_.find( msg.id );
-    file_for_id_.erase( p );
+    if( p != file_for_id_.end( ) )
+    {
+        file_for_id_.erase( p );
+    }
     QMap < quint32, quint32 >::iterator p1 = last_seq_for_id_.find( msg.id );
-    last_seq_for_id_.erase( p1 );
+    if( p1 != last_seq_for_id_.end() ) )
+    {
+        last_seq_for_id_.erase( p1 );
+    }
+
 }
 
 void ReceiveTransaction::LoadFile( Message &msg  )
 {
-    QFile file;
-    QDir::setCurrent("/tmp");
-    file.setFileName( file_for_id_[ msg.id ] );
-    QDir::setCurrent( '/' + DOWNLOADS );
-    file.open( QIODevice :: Append | QIODevice :: WriteOnly  );
+    QString path = QDir::currentPath+ QDir::separator() + DOWNLOADS;
+    QFile file( path + QDir::separator() + file_for_id_.find( msg.id ) );
+    file.open( QIODevice :: Append );
     QDataStream  out( &file );
     out << msg.data;
     file.close();

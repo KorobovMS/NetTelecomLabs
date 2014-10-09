@@ -12,9 +12,11 @@ namespace State
 {
 namespace Request
 {
-const quint32 REQ_ID = 0;
-const quint32 SEND_DATA = 3;
-const quint32 SEND_FINISH = 6;
+const quint32 REQUEST_PERMISSION = 0;
+const quint32 REQ_ID = 3;
+const quint32 SEND_DATA = 6;
+const quint32 SEND_FINISH = 9;
+const quint32 KILL_YOURSELF = 12;
 }
 
 namespace Response

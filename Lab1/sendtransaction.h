@@ -18,11 +18,15 @@ class SendTransaction : public QObject
     Q_OBJECT
 
 public:
-    explicit SendTransaction(int timeout = 5000,
-                             int MTU = 512,
-                             int mex_retransmissions = 5,
-                             QObject *parent = 0);
-    void Go(const QHostAddress& addr, quint16 port, FilePtr file);
+    SendTransaction(const QHostAddress& addr,
+                    quint16 port,
+                    FilePtr file,
+                    int timeout = 5000,
+                    int MTU = 512,
+                    int mex_retransmissions = 5,
+                    QObject *parent = 0);
+public slots:
+    void Go();
 
 signals:
     void TransmissionStarted();

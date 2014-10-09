@@ -8,13 +8,14 @@
 #include "helpers.h"
 #include "message.h"
 
-SendTransaction::SendTransaction(int timeout,
+SendTransaction::SendTransaction(const QHostAddress& addr,
+                                 quint16 port,
+                                 FilePtr file,
+                                 int timeout,
                                  int MTU,
                                  int max_retransmissions,
                                  QObject *parent)
-    : QObject(parent),
-      timeout_(timeout),
-      max_retransmissions_(max_retransmissions)
+    : QObject(parent)
 {
     // For explanation see "Serializing Qt Data Types" in docs
     typedef quint32 ByteArrayLengthType;
@@ -24,10 +25,8 @@ SendTransaction::SendTransaction(int timeout,
             sizeof(ByteArrayLengthType) -
             sizeof(Message::id) -
             sizeof(Message::seq);
-}
-
-void SendTransaction::Go(const QHostAddress& addr, quint16 port, FilePtr file)
-{
+    timeout_ = timeout;
+    max_retransmissions_ = max_retransmissions;
     addr_ = addr;
     port_ = port;
     file_ = file;
@@ -35,11 +34,9 @@ void SendTransaction::Go(const QHostAddress& addr, quint16 port, FilePtr file)
     socket_.bind();
     seq_ = 0;
     id_ = 0;
-
-    ProcessTransaction();
 }
 
-void SendTransaction::ProcessTransaction()
+void SendTransaction::Go()
 {
     if (!RequestId())
     {

@@ -25,7 +25,7 @@ void ReqToDLdialog::RxDataFromMain(QHostAddress addr, quint16 port,
     id_ = id;
 
     ui->labelFilename->setText("Input file: " + filename_);
-    ui->labelIp->setText("from: " + addr_ + ':' + port_);
+    ui->labelIp->setText("from: " + addr_.toString() + ':' + port_);
 }
 
 void ReqToDLdialog::on_pushButtonAccept_clicked()

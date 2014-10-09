@@ -40,7 +40,6 @@ void SendDialog::on_toolButtonFile_clicked()
 void SendDialog::on_pushButtonOk_clicked()
 {
     QString filename = ui->lineEditFile->text();
-    filename = "C:/Users/user/Desktop/a.txt";
     if (QFile::exists(filename))
     {
         QHostAddress dest_ip = QHostAddress(ui->lineEditIp->text());
@@ -50,13 +49,8 @@ void SendDialog::on_pushButtonOk_clicked()
         QThread* worker_thread = new QThread;
         QFile* file = new QFile(filename);
         file->moveToThread(worker_thread);
-        SendTransaction* st = new SendTransaction(
-                    QHostAddress("127.0.0.1"),
-                    60001,
-                    FilePtr(file));
-        //SendTransaction* st = new SendTransaction(dest_ip, dest_port,
-        //                                          FilePtr(new QFile(filename)));
-
+        SendTransaction* st = new SendTransaction(dest_ip, dest_port,
+                                                  FilePtr(new QFile(filename)));
         st->moveToThread(worker_thread);
 
         connect(worker_thread, SIGNAL(started()),

@@ -39,7 +39,6 @@ void ReceiveTransaction::ReceiveMessage( )
         if( msg.state == State::Request::REQ_ID )
         {
             RegId( msg );
-            return true;
         }
         else if( msg.state == State::Request::SEND_DATA )
         {

@@ -16,7 +16,7 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction( const QHostAddress addr, quint16 port );
+    ReceiveTransaction( const QHostAddress& addr, quint16 port );
 
 signals:
     void StartReceiving();

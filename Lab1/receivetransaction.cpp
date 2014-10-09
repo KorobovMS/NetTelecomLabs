@@ -8,29 +8,28 @@
 #include "helpers.h"
 #include "message.h"
 
-ReceiveTransaction::ReceiveTransaction( QHostAddress addr, quint16 port )
+ReceiveTransaction::ReceiveTransaction( const QHostAddress& addr, quint16 port )
 {
-
     addr_ = addr;
     port_ = port;
 
     socket_.bind();
-    //PendingMessage();
     connect( &socket_ ,SIGNAL( readyRead() ), this, SLOT( PendingMessage() ) );
 }
 
 void ReceiveTransaction::PendingMessage()
 {
-    while( 1 )
+    const int for_all_eternity = -1;
+    while ( 1 )
     {
-        socket_.waitForReadyRead( -1 );//Всегда в ожидании.
+        socket_.waitForReadyRead( for_all_eternity );
         ReceiveMessage();
     }
 }
 
-bool ReceiveTransaction::ReceiveMessage( )
+void ReceiveTransaction::ReceiveMessage( )
 {
-    while( socket_.hasPendingDatagrams() ) //Ожидаем сообщения
+    while( socket_.hasPendingDatagrams() )
     {
         QByteArray datagram;
         datagram.resize( socket_.pendingDatagramSize() );
@@ -46,19 +45,16 @@ bool ReceiveTransaction::ReceiveMessage( )
         {
             if ( last_seq_for_id_[ msg.id ] < msg.seq )
             {
-                last_seq_for_id_[ msg.id ] = msg.id;
+                last_seq_for_id_[ msg.id ] = msg.seq;
                 LoadFile( msg );
             }
             SendMessage( State::Response::RECV_DATA, msg.id, msg.seq  );
-            return true;
         }
         else if( msg.state == State::Request::SEND_FINISH )
         {
             SendFinish( msg );
         }
-
     }
-    return false;
 }
 
 void ReceiveTransaction::SendMessage( quint32 state, quint32 id,  quint32 seq )
@@ -75,7 +71,6 @@ void ReceiveTransaction::RegId( Message& msg )
     QString fName;
     quint64 bytesTotal;
     in >> fName >> bytesTotal;
-    //Progress( bytes_received, bytes_total )
 
     while( 1 )
     {
@@ -110,7 +105,6 @@ void ReceiveTransaction::LoadFile( Message &msg  )
     file.close();
 }
 
-
 void ReceiveTransaction::SendFinish( Message& msg )
 {
     QByteArray datagram;
@@ -118,11 +112,3 @@ void ReceiveTransaction::SendFinish( Message& msg )
     stream << Message( State::Response::RECV_FINISH, msg.seq, msg.id, 0 );
     socket_.writeDatagram( datagram, addr_, port_ );
 }
-
-
-
-
-
-
-
-

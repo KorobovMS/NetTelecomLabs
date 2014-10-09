@@ -41,7 +41,7 @@
      </font>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>No IP assigned</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelPort">
@@ -59,7 +59,7 @@
      </font>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>No port assigned</string>
     </property>
    </widget>
   </widget>
@@ -97,16 +97,13 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionSend">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>Send</string>
    </property>
   </action>
   <action name="actionConfigure">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Configure</string>

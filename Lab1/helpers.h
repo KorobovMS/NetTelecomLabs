@@ -1,6 +1,11 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
+#include <QFile>
+#include <QSharedPointer>
+
+typedef QSharedPointer<QFile> FilePtr;
+
 namespace State
 {
 namespace Request

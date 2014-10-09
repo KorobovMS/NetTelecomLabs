@@ -1,8 +1,8 @@
 #ifndef CONFIGDIALOG_H
 #define CONFIGDIALOG_H
-//Окно для задания ип и порта
-#include <QDialog>
 
+#include <QDialog>
+#include <QHostAddress>
 
 namespace Ui {
 class ConfigDialog;
@@ -24,7 +24,7 @@ private:
     Ui::ConfigDialog *ui;
 
 signals:
-    void DataIsValid(QString Ip, QString Port);
+    void DataIsValid(QHostAddress Ip, quint16 Port);
 };
 
 #endif // CONFIGDIALOG_H

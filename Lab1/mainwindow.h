@@ -1,8 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-//главное окно
+
 #include <QMainWindow>
-#include "QStringList"
+#include <QStringList>
+#include <QHostAddress>
+
 #include "senddialog.h"
 #include "configdialog.h"
 #include "reqtodldialog.h"
@@ -21,29 +23,26 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
-    QString my_ip;
-    QString my_port;
+    Ui::MainWindow* ui_;
+    QHostAddress my_ip_;
+    quint16 my_port_;
 
-    QString file_to_send;
-    QString ip_to_send;
-    QString port_to_send;
+    QString file_to_send_;
+    QHostAddress ip_to_send_;
+    quint16 port_to_send_;
 
 private slots:
-    void on_actionSend_triggered();  //нажали file-send
+    void on_actionSend_triggered();  // File -> Send
 
-    void RecieveFileSlot(QString Ip, QString Port, QString FileName, QString Progress);//запрос на сохранение
-    void RecieveAcceptSlot(); //согласились принять файл
-    void RecieveDeclineSlot(); //оотклонили
+    void RecieveFileSlot(QString Ip, QString Port, QString FileName, QString Progress);
+    void RecieveAcceptSlot();
+    void RecieveDeclineSlot();
 
-    void on_actionConfigure_triggered(); //нажали Options-config
-    void RecieveDataFromConfig(QString Ip, QString Port); //вывод нашего ип и порта в главное окно из конфиги
-
-
+    void on_actionConfigure_triggered(); // Options -> Config
+    void IpAndPortConfigured(const QHostAddress& ip, quint16 port);
 
 signals:
     void TxDataToReqDialog(QString Filename, QString Ip, QString Port);
-
 };
 
 #endif // MAINWINDOW_H

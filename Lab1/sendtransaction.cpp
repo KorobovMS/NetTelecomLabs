@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QFile>
 #include <QFileInfo>
+#include <QThread>
 #include <QUdpSocket>
 
 #include "helpers.h"
@@ -31,13 +32,17 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
     port_ = port;
     file_ = file;
     bytes_total_ = file_->size();
-    socket_.bind();
     seq_ = 0;
     id_ = 0;
 }
 
 void SendTransaction::Go()
 {
+    socket_ = new QUdpSocket;
+    connect(this->thread(), SIGNAL(finished()),
+            socket_, SLOT(deleteLater()));
+    socket_->bind();
+
     if (!RequestId())
     {
         emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
@@ -57,6 +62,8 @@ void SendTransaction::Go()
         emit TransmissionFailed(State::Error::FINISH_FAILED);
         return;
     }
+
+    emit TransmissionFinished();
 }
 
 bool SendTransaction::RequestId()
@@ -130,9 +137,8 @@ bool SendTransaction::FinishSending()
         return false;
     }
 
-    emit TransmissionFinished();
-
-    socket_.close();
+    socket_->close();
+    file_->close();
     return true;
 }
 
@@ -141,7 +147,7 @@ bool SendTransaction::SendMessage(quint32 state, const QByteArray& data)
     QByteArray datagram;
     QDataStream stream(&datagram, QIODevice::ReadWrite);
     stream << Message(state, seq_, id_, data);
-    qint64 sent = socket_.writeDatagram(datagram, addr_, port_);
+    qint64 sent = socket_->writeDatagram(datagram, addr_, port_);
     return sent == datagram.size();
 }
 
@@ -150,7 +156,7 @@ bool SendTransaction::TransmitMessage(quint32 state, const QByteArray& data)
     for (int tr = 0; tr < max_retransmissions_; ++tr)
     {
         bool success = SendMessage(state, data);
-        if (success && socket_.waitForReadyRead(timeout_))
+        if (success && socket_->waitForReadyRead(timeout_))
         {
             return true;
         }
@@ -160,11 +166,11 @@ bool SendTransaction::TransmitMessage(quint32 state, const QByteArray& data)
 
 bool SendTransaction::ReceiveMessage(Message& message)
 {
-    while (socket_.hasPendingDatagrams())
+    while (socket_->hasPendingDatagrams())
     {
         QByteArray datagram;
-        datagram.resize(socket_.pendingDatagramSize());
-        socket_.readDatagram(datagram.data(), datagram.size());
+        datagram.resize(socket_->pendingDatagramSize());
+        socket_->readDatagram(datagram.data(), datagram.size());
         Message msg(datagram);
         if (msg.seq == seq_)
         {

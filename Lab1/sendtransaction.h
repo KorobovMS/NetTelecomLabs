@@ -5,13 +5,13 @@
 #include <QUdpSocket>
 #include <QSharedPointer>
 
+#include "helpers.h"
+
 struct Message;
 class QByteArray;
 class QUdpSocket;
 class QHostAddress;
 class QFile;
-
-typedef QSharedPointer<QFile> FilePtr;
 
 class SendTransaction : public QObject
 {
@@ -47,7 +47,7 @@ private:
     void MakeFileData(QByteArray& file_data);
 
 private:
-    QUdpSocket socket_;
+    QUdpSocket* socket_;
     QHostAddress addr_;
     quint16 port_;
     FilePtr file_;

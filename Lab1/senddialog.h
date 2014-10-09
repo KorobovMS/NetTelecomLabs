@@ -1,7 +1,8 @@
 #ifndef SENDDIALOG_H
 #define SENDDIALOG_H
-//окно выбора пути и адреса отправляемого файла
+
 #include <QDialog>
+#include <QHostAddress>
 
 namespace Ui {
 class SendDialog;
@@ -17,12 +18,6 @@ public:
 
 private:
     Ui::SendDialog *ui;
-    /*
-    QString dest_file;
-    QString dest_ip;
-    QString dest_port;
-    QString dest_progr;
-    */
 
 private slots:
     void on_toolButtonFile_clicked();
@@ -30,10 +25,7 @@ private slots:
     void on_pushButtonCancel_clicked();
 
 signals:
-    void TxDataToProgrDialog(QString DestIp, QString DestPort, QString DestFile); //отправляем данные в главное окно
-
+    void TxDataToProgrDialog(QHostAddress DestIp, quint16 DestPort, QString DestFile);
 };
-
-
 
 #endif // SENDDIALOG_H

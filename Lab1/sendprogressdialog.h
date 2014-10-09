@@ -1,7 +1,8 @@
 #ifndef SENDPROGRESSDIALOG_H
 #define SENDPROGRESSDIALOG_H
-//прогресс отправления файла
+
 #include <QDialog>
+#include <QHostAddress>
 #include <QString>
 
 namespace Ui {
@@ -14,23 +15,19 @@ class SendProgressDialog : public QDialog
 
 public:
     explicit SendProgressDialog(QWidget *parent = 0);
-  /*  QString ip;
-    QString port;
-    QString progr;*/
     ~SendProgressDialog();
 
 private slots:
     void on_pushButtonCancel_clicked();
 
 public slots:
-    void RxDataFromSendDialog(QString DestIp, QString DestPort, QString DestFile);
-
+    void RxDataFromSendDialog(QHostAddress DestIp, quint16 DestPort, QString DestFile);
+    void Progress(int bytes_sent, int bytes_total);
 
 signals:
 
 private:
     Ui::SendProgressDialog *ui;
-   // QString DestIp;
 };
 
 #endif // SENDPROGRESSDIALOG_H

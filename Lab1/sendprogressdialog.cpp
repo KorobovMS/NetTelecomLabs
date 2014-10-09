@@ -6,7 +6,7 @@ SendProgressDialog::SendProgressDialog(QWidget *parent) :
     ui(new Ui::SendProgressDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Sending");
+    this->setWindowTitle("Sending...");
 }
 
 SendProgressDialog::~SendProgressDialog()
@@ -19,9 +19,15 @@ void SendProgressDialog::on_pushButtonCancel_clicked()
     close();
 }
 
-void SendProgressDialog::RxDataFromSendDialog(QString DestIp, QString DestPort, QString DestFile)
+void SendProgressDialog::RxDataFromSendDialog(QHostAddress DestIp, quint16 DestPort, QString DestFile)
 {
-    QString s = "to " + DestIp + ':' + DestPort;
+    QString s = "to " + DestIp.toString() + ':' + DestPort;
     ui->labelIp->setText(s);
     ui->labelFilename->setText("Send " + DestFile);
+}
+
+void SendProgressDialog::Progress(int bytes_sent, int bytes_total)
+{
+    double percent = 100.0*bytes_sent/bytes_total;
+    ui->progressBar->setValue(static_cast<int>(percent));
 }

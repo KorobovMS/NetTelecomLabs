@@ -1,23 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "senddialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui_(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
     this->setWindowTitle("UDP client/server");
-    on_actionConfigure_triggered(); //открытие конфиги при запуске
-    //RecieveFileSlot("12", "12", "12", "12"); //тест окна
-
-    //connect(this, SIGNAL(*lol*),
-    //        this, SLOT(RecieveFileSlot(QString,QString,QString,QString))); //Коннект для приёма файлов
+    on_actionConfigure_triggered();
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete ui_;
 }
 
 //Send
@@ -32,22 +27,22 @@ void MainWindow::on_actionSend_triggered()
 void MainWindow::on_actionConfigure_triggered()
 {
     ConfigDialog *Config = new ConfigDialog(this);
-    connect(Config, SIGNAL(DataIsValid(QString,QString)), this, SLOT(RecieveDataFromConfig(QString,QString)));
+    connect(Config, SIGNAL(DataIsValid(QHostAddress,quint16)),
+            this, SLOT(IpAndPortConfigured(QHostAddress,quint16)));
     Config->setModal(true);
     Config->exec();
 }
-void MainWindow::RecieveDataFromConfig(QString Ip, QString Port)
+
+void MainWindow::IpAndPortConfigured(const QHostAddress& ip, quint16 port)
 {
-    my_ip = Ip;
-    my_port = Port;
-    ui->labelIp->setText("Current Ip is: " + Ip);
-    ui->labelPort->setText("Current Port is: " + Port);
-    //
-    //RecieveFileSlot("12", "12", "12", "12"); //тест окна
+    my_ip_ = ip;
+    my_port_ = port;
+    ui_->labelIp->setText(tr("Current Ip is: %1").arg(ip.toString()));
+    ui_->labelPort->setText(tr("Current Port is: %1").arg(port));
 }
 
-//Reciev
-void MainWindow::RecieveFileSlot(QString Ip, QString Port, QString FileName, QString Progress) //Слот для входящего файла. Отсуда вызывается ацепт\деклайн
+//Recieve
+void MainWindow::RecieveFileSlot(QString Ip, QString Port, QString FileName, QString Progress)
 {
     ReqToDLdialog *R = new ReqToDLdialog(this);
     emit(TxDataToReqDialog(FileName, Ip, Port));
@@ -55,7 +50,6 @@ void MainWindow::RecieveFileSlot(QString Ip, QString Port, QString FileName, QSt
     connect(R, SIGNAL(Decline()), this, SLOT(RecieveDeclineSlot()));
     R->setModal(true);
     R->exec();
-
 }
 
 void MainWindow::RecieveAcceptSlot()
@@ -64,6 +58,7 @@ void MainWindow::RecieveAcceptSlot()
     //тут должен быть коннект на сигнал, передающий данные на окно прогресса загрузки
     RProrg->show();
 }
+
 void MainWindow::RecieveDeclineSlot()
 {
 

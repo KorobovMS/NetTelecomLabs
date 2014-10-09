@@ -20,7 +20,8 @@ void ConfigDialog::on_pushButtonOk_clicked()
 
 
     // ---------
-    emit DataIsValid(ui->lineEditIp->text(), ui->lineEditPort->text());
+    emit DataIsValid(QHostAddress(ui->lineEditIp->text()),
+                     ui->lineEditPort->text().toUShort());
     close();
 }
 

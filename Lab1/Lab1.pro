@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     reqtodldialog.cpp \
     sendtransaction.cpp \
     message.cpp \
-    receivetransaction.cpp
+    receivetransaction.cpp \
+    server.cpp
 
 HEADERS  += mainwindow.h \
     senddialog.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     sendtransaction.h \
     message.h \
     helpers.h \
-    receivetransaction.h
+    receivetransaction.h \
+    server.h
 
 FORMS    += mainwindow.ui \
     senddialog.ui \

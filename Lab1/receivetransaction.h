@@ -16,14 +16,14 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction( QHostAddress addr, quint16 port );
+    ReceiveTransaction( const QHostAddress addr, quint16 port );
 
 signals:
     void StartReceiving();
-    void Progress(int bytes_received, int bytes_total);
+    void Progress( int bytes_received, int bytes_total );
     void FinishReceiving();
 private slots:
-    void PendingMessage();
+    void PendingMessage( );
 private:
     void SendMessage( quint32 state, quint32 id,  quint32 seq );
     void LoadFile( Message& msg  );

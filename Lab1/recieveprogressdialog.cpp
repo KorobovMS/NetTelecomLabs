@@ -13,6 +13,12 @@ RecieveProgressDialog::~RecieveProgressDialog()
     delete ui;
 }
 
+void RecieveProgressDialog::Progress(int r, int t)
+{
+    double percent = 100.0*r/t;
+    ui->progressBar->setValue(static_cast<int>(percent));
+}
+
 void RecieveProgressDialog::on_pushButtonCancel_clicked()
 {
     close();

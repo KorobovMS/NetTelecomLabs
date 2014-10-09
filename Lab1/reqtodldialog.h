@@ -30,7 +30,7 @@ signals:
     void Decline();
 
 public slots:
-    RxDataFromMain(QHostAddress addr, quint16 port, QString filename,
+    void RxDataFromMain(QHostAddress addr, quint16 port, QString filename,
                    quint64 filesize, quint32 id);
 
 private slots:

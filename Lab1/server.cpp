@@ -66,10 +66,12 @@ void Server::ServeForever()
     if (socket_->bind(*addr_, *port_))
     {
         emit SocketBound(*addr_, *port_);
+        qDebug() << "Server socket is bound";
     }
     else
     {
         emit SocketNotBound();
+        qDebug() << "Server socket is not bound";
         return;
     }
 
@@ -98,10 +100,12 @@ void Server::ProcessDatagrams()
             quint64 filesize;
             RetrieveRequestInfo(msg, filename, filesize);
             emit NewRequest(addr, port, filename, filesize, next_id_);
+            qDebug() << "New request";
             ++next_id_;
         }
         else if (msg.state == State::Request::KILL_YOURSELF)
         {
+            qDebug() << "Kill Server";
             is_active_ = false;
         }
     }

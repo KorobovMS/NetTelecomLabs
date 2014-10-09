@@ -15,6 +15,9 @@ public:
     explicit RecieveProgressDialog(QWidget *parent = 0);
     ~RecieveProgressDialog();
 
+public slots:
+    void Progress(int r, int t);
+
 private slots:
     void on_pushButtonCancel_clicked();
 

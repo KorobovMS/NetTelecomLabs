@@ -21,9 +21,10 @@ public:
     SendTransaction(const QHostAddress& addr,
                     quint16 port,
                     FilePtr file,
-                    int timeout = 5000,
+                    int timeout_for_sending = 5000,
+                    int timeout_for_permission = 60000,
                     int MTU = 512,
-                    int mex_retransmissions = 5,
+                    int max_retransmissions = 5,
                     QObject *parent = 0);
 public slots:
     void Go();
@@ -45,6 +46,7 @@ private:
     bool TransmitMessage(quint32 state, const QByteArray& data = QByteArray());
     bool ReceiveMessage(Message& message);
     void MakeFileData(QByteArray& file_data);
+    void MakePeerData(const Message& msg, QHostAddress& addr, quint16& port);
 
 private:
     QUdpSocket* socket_;
@@ -54,6 +56,8 @@ private:
     quint32 seq_;
     quint32 id_;
     int timeout_;
+    const int timeout_for_sending_;
+    const int timeout_for_permission_;
     int data_size_;
     int max_retransmissions_;
     quint64 bytes_sent_;

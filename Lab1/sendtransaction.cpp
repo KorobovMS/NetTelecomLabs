@@ -12,11 +12,14 @@
 SendTransaction::SendTransaction(const QHostAddress& addr,
                                  quint16 port,
                                  FilePtr file,
-                                 int timeout,
+                                 int timeout_for_sending,
+                                 int timeout_for_permission,
                                  int MTU,
                                  int max_retransmissions,
                                  QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      timeout_for_sending_(timeout_for_sending),
+      timeout_for_permission_(timeout_for_permission)
 {
     // For explanation see "Serializing Qt Data Types" in docs
     typedef quint32 ByteArrayLengthType;
@@ -26,7 +29,6 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
             sizeof(ByteArrayLengthType) -
             sizeof(Message::id) -
             sizeof(Message::seq);
-    timeout_ = timeout;
     max_retransmissions_ = max_retransmissions;
     addr_ = addr;
     port_ = port;
@@ -43,6 +45,7 @@ void SendTransaction::Go()
             socket_, SLOT(deleteLater()));
     socket_->bind();
 
+    timeout_ = timeout_for_permission_;
     if (!RequestId())
     {
         emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
@@ -51,6 +54,7 @@ void SendTransaction::Go()
 
     PrepareFile();
 
+    timeout_ = timeout_for_sending_;
     if (!SendFile())
     {
         emit TransmissionFailed(State::Error::SEND_DATA_FAILED);
@@ -70,7 +74,7 @@ bool SendTransaction::RequestId()
 {
     QByteArray fileData;
     MakeFileData(fileData);
-    if (!TransmitMessage(State::Request::REQ_ID, fileData))
+    if (!TransmitMessage(State::Request::REQUEST_PERMISSION, fileData))
     {
         return false;
     }
@@ -81,6 +85,7 @@ bool SendTransaction::RequestId()
         return false;
     }
 
+    MakePeerData(msg, addr_, port_);
     id_ = msg.id;
     return true;
 }
@@ -187,4 +192,11 @@ void SendTransaction::MakeFileData(QByteArray& file_data)
     QDataStream stream(&file_data, QIODevice::WriteOnly);
     QFileInfo info(file_->fileName());
     stream << info.fileName() << bytes_total_;
+}
+
+void SendTransaction::MakePeerData(const Message& msg, QHostAddress& addr,
+                                   quint16& port)
+{
+    QDataStream stream(msg.data);
+    stream >> addr >> port;
 }

@@ -94,7 +94,7 @@ void ReceiveTransaction::DelId( Message& msg )
         file_for_id_.erase( p );
     }
     QMap < quint32, quint32 >::iterator p1 = last_seq_for_id_.find( msg.id );
-    if( p1 != last_seq_for_id_.end ) )
+    if( p1 != last_seq_for_id_.end() ) )
     {
         last_seq_for_id_.erase( p1 );
     }
@@ -103,9 +103,8 @@ void ReceiveTransaction::DelId( Message& msg )
 
 void ReceiveTransaction::LoadFile( Message &msg  )
 {
-    QString path = '/' + DOWNLOADS; //Пример
-    QDir().mkpath( path );
-    QFile file( path + '/' + file_for_id_.find( msg.id ) );
+    QString path = QDir::currentPath+ QDir::separator() + DOWNLOADS;
+    QFile file( path + QDir::separator() + file_for_id_.find( msg.id ) );
     file.open( QIODevice :: Append );
     QDataStream  out( &file );
     out << msg.data;

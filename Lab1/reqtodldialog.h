@@ -1,7 +1,8 @@
 #ifndef REQTODLDIALOG_H
 #define REQTODLDIALOG_H
-//окно запроса на сохранение входящего файла
+
 #include <QDialog>
+#include <QHostAddress>
 
 namespace Ui {
 class ReqToDLdialog;
@@ -17,13 +18,20 @@ public:
 
 private:
     Ui::ReqToDLdialog *ui;
+    QHostAddress addr_;
+    quint16 port_;
+    QString filename_;
+    quint64 filesize_;
+    quint32 id_;
 
 signals:
-    void Accept();
+    void Accept(QHostAddress addr, quint16 port, QString filename,
+                quint64 filesize, quint32 id);
     void Decline();
 
 public slots:
-    //RxDataFromMain(QString Filename, QString Ip, QString Port);
+    RxDataFromMain(QHostAddress addr, quint16 port, QString filename,
+                   quint64 filesize, quint32 id);
 
 private slots:
     void on_pushButtonAccept_clicked();

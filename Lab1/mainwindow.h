@@ -37,9 +37,9 @@ private:
 private slots:
     void on_actionSend_triggered();  // File -> Send
 
-    void NewRequest(QHostAddress addr, quint16 port, QString filename,
+    void NewRequest(QHostAddress host_addr, QHostAddress addr, quint16 port, QString filename,
                          quint64 filesize, quint32 id);
-    void RecieveAcceptSlot(QHostAddress addr, quint16 port, QString filename,
+    void RecieveAcceptSlot(QHostAddress host_addr, QHostAddress addr, quint16 port, QString filename,
                            quint64 filesize, quint32 id);
     void RecieveDeclineSlot();
 
@@ -50,7 +50,7 @@ private:
     void KillServer();
 
 signals:
-    void TxDataToReqDialog(QHostAddress addr, quint16 port, QString filename,
+    void TxDataToReqDialog(QHostAddress host_addr, QHostAddress addr, quint16 port, QString filename,
                            quint64 filesize, quint32 id);
 };
 

@@ -21,7 +21,7 @@ void SendProgressDialog::on_pushButtonCancel_clicked()
 
 void SendProgressDialog::RxDataFromSendDialog(QHostAddress DestIp, quint16 DestPort, QString DestFile)
 {
-    QString s = "to " + DestIp.toString() + ':' + DestPort;
+    QString s = "to " + DestIp.toString() + ':' + tr("%1").arg(DestPort);
     ui->labelIp->setText(s);
     ui->labelFilename->setText("Send " + DestFile);
 }

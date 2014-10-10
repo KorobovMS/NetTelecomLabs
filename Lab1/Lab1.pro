@@ -39,6 +39,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     senddialog.ui \
     sendprogressdialog.ui \
-    recieveprogressdialog.ui \
     configdialog.ui \
-    reqtodldialog.ui
+    reqtodldialog.ui \
+    recieveprogressdialog.ui

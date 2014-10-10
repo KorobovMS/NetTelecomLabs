@@ -18,6 +18,7 @@ public:
 
 private:
     Ui::ReqToDLdialog *ui;
+    QHostAddress host_addr_;
     QHostAddress addr_;
     quint16 port_;
     QString filename_;
@@ -25,12 +26,12 @@ private:
     quint32 id_;
 
 signals:
-    void Accept(QHostAddress addr, quint16 port, QString filename,
+    void Accept(QHostAddress host_addr, QHostAddress addr, quint16 port, QString filename,
                 quint64 filesize, quint32 id);
     void Decline();
 
 public slots:
-    void RxDataFromMain(QHostAddress addr, quint16 port, QString filename,
+    void RxDataFromMain(QHostAddress host_addr, QHostAddress addr, quint16 port, QString filename,
                    quint64 filesize, quint32 id);
 
 private slots:

@@ -14,10 +14,12 @@ ReqToDLdialog::~ReqToDLdialog()
     delete ui;
 }
 
-void ReqToDLdialog::RxDataFromMain(QHostAddress addr, quint16 port,
+void ReqToDLdialog::RxDataFromMain(QHostAddress host_addr, QHostAddress addr, quint16 port,
                                    QString filename, quint64 filesize,
                                    quint32 id)
 {
+    qDebug() << "RxDataFromMain" << addr << port;
+    host_addr_ = host_addr;
     addr_ = addr;
     port_ = port;
     filename_ = filename;
@@ -25,12 +27,12 @@ void ReqToDLdialog::RxDataFromMain(QHostAddress addr, quint16 port,
     id_ = id;
 
     ui->labelFilename->setText("Input file: " + filename_);
-    ui->labelIp->setText("from: " + addr_.toString() + ':' + port_);
+    ui->labelIp->setText("from: " + addr_.toString() + ':' + tr("%1").arg(port_));
 }
 
 void ReqToDLdialog::on_pushButtonAccept_clicked()
 {
-    emit Accept(addr_, port_, filename_, filesize_, id_);
+    emit Accept(host_addr_, addr_, port_, filename_, filesize_, id_);
     close();
 }
 

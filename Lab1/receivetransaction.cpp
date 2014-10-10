@@ -9,16 +9,18 @@
 #include "helpers.h"
 #include "message.h"
 
-ReceiveTransaction::ReceiveTransaction(QHostAddress addr, quint16 port,
+ReceiveTransaction::ReceiveTransaction(QHostAddress host, QHostAddress addr, quint16 port,
                                        QString filename, quint64 filesize,
                                        quint32 id)
 {
+    host_addr_ = host;
     addr_ = addr;
     port_ = port;
     filename_ = filename;
     filesize_ = filesize;
     id_ = id;
     is_active_ = true;
+    qDebug() << "RT" << addr << port << filename << filesize << id;
 }
 
 void ReceiveTransaction::Go()
@@ -26,7 +28,7 @@ void ReceiveTransaction::Go()
     socket_ = new QUdpSocket;
     connect(this->thread(), SIGNAL(finished()),
             socket_, SLOT(deleteLater()));
-    socket_->bind();
+    socket_->bind(host_addr_);
 
     file_ = new QFile(filename_);
     connect(this->thread(), SIGNAL(finished()),

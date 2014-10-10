@@ -16,7 +16,7 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction( QHostAddress addr, quint16 port,
+    ReceiveTransaction( QHostAddress host, QHostAddress addr, quint16 port,
                         QString filename, quint64 filesize,
                         quint32 id );
 
@@ -34,6 +34,7 @@ private:
     void ReceiveMessage( );
     void SendFinish( Message& msg );
 
+    QHostAddress host_addr_;
     QHostAddress addr_;
     quint16 port_;
     QString filename_;

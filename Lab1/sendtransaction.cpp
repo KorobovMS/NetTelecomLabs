@@ -40,6 +40,7 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
 
 void SendTransaction::Go()
 {
+    qDebug() << "Start sending";
     socket_ = new QUdpSocket;
     connect(this->thread(), SIGNAL(finished()),
             socket_, SLOT(deleteLater()));
@@ -85,7 +86,9 @@ bool SendTransaction::RequestId()
         return false;
     }
 
+    qDebug() << "Old address" << addr_ << port_;
     MakePeerData(msg, addr_, port_);
+    qDebug() << "New address" << addr_ << port_;
     id_ = msg.id;
     return true;
 }

@@ -5,6 +5,7 @@ RecieveProgressDialog::RecieveProgressDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RecieveProgressDialog)
 {
+    ui->setupUi(this);
     this->setWindowTitle("Recieving");
 }
 

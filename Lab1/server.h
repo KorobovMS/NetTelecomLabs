@@ -19,7 +19,7 @@ public:
 signals:
     void SocketBound(QHostAddress, quint16);
     void SocketNotBound();
-    void NewRequest(QHostAddress, quint16, QString, quint64, quint32);
+    void NewRequest(QHostAddress, QHostAddress, quint16, QString, quint64, quint32);
 
 public slots:
     void ServeForever();

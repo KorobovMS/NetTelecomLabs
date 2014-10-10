@@ -47,6 +47,7 @@ Server::~Server()
 
 void Server::ServeForever()
 {
+    qDebug() << "Serve forever";
     is_active_ = true;
     socket_ = new QUdpSocket;
     socket_->moveToThread(this->thread());
@@ -99,7 +100,7 @@ void Server::ProcessDatagrams()
             QString filename;
             quint64 filesize;
             RetrieveRequestInfo(msg, filename, filesize);
-            emit NewRequest(addr, port, filename, filesize, next_id_);
+            emit NewRequest(socket_->localAddress(), addr, port, filename, filesize, next_id_);
             qDebug() << "New request";
             ++next_id_;
         }

@@ -49,6 +49,7 @@ void Server::ServeForever()
 {
     qDebug() << "Serve forever";
     is_active_ = true;
+
     socket_ = new QUdpSocket;
     socket_->moveToThread(this->thread());
     connect(this->thread(), SIGNAL(finished()),
@@ -66,13 +67,13 @@ void Server::ServeForever()
 
     if (socket_->bind(*addr_, *port_))
     {
-        emit SocketBound(*addr_, *port_);
         qDebug() << "Server socket is bound";
+        emit SocketBound(*addr_, *port_);
     }
     else
     {
-        emit SocketNotBound();
         qDebug() << "Server socket is not bound";
+        emit SocketNotBound();
         return;
     }
 
@@ -100,13 +101,12 @@ void Server::ProcessDatagrams()
             QString filename;
             quint64 filesize;
             RetrieveRequestInfo(msg, filename, filesize);
-            emit NewRequest(socket_->localAddress(), addr, port, filename, filesize, next_id_);
-            qDebug() << "New request";
+            emit NewRequest(socket_->localAddress(), addr, port,
+                            filename, filesize, next_id_);
             ++next_id_;
         }
         else if (msg.state == State::Request::KILL_YOURSELF)
         {
-            qDebug() << "Kill Server";
             is_active_ = false;
         }
     }

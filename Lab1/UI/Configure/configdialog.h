@@ -16,15 +16,15 @@ public:
     explicit ConfigDialog(QWidget* parent = 0);
     ~ConfigDialog();
 
+signals:
+    void DataIsValid(QHostAddress ip, quint16 port);
+
 private slots:
     void on_okButton_clicked();
     void on_cancelButton_clicked();
 
 private:
     Ui::ConfigDialog* ui_;
-
-signals:
-    void DataIsValid(QHostAddress ip, quint16 port);
 };
 
 #endif // CONFIGDIALOG_H

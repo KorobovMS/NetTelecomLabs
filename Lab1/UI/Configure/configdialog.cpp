@@ -1,12 +1,12 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
-ConfigDialog::ConfigDialog(QWidget *parent) :
+ConfigDialog::ConfigDialog(QWidget* parent) :
     QDialog(parent),
     ui_(new Ui::ConfigDialog)
 {
     ui_->setupUi(this);
-    this->setWindowTitle("Configure IP/port");
+    this->setWindowTitle(tr("Configure IP/port"));
 }
 
 ConfigDialog::~ConfigDialog()

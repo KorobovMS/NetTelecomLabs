@@ -12,5 +12,5 @@ TARGET = Lab1
 TEMPLATE = app
 
 include(Logic/Logic.pri)
-include(Main/Main.pri)
 include(UI/UI.pri)
+include(Main/Main.pri)

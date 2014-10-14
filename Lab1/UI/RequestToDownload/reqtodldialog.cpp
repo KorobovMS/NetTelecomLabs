@@ -1,20 +1,20 @@
 #include "reqtodldialog.h"
 #include "ui_reqtodldialog.h"
 
-ReqToDLdialog::ReqToDLdialog(QWidget *parent) :
+RequestToDownloadDialog::RequestToDownloadDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ReqToDLdialog)
+    ui(new Ui::RequestToDownloadDialog)
 {
     ui->setupUi(this);
     this->setWindowTitle("Incoming file");
 }
 
-ReqToDLdialog::~ReqToDLdialog()
+RequestToDownloadDialog::~RequestToDownloadDialog()
 {
     delete ui;
 }
 
-void ReqToDLdialog::RxDataFromMain(QHostAddress host_addr, QHostAddress addr, quint16 port,
+void RequestToDownloadDialog::RxDataFromMain(QHostAddress host_addr, QHostAddress addr, quint16 port,
                                    QString filename, quint64 filesize,
                                    quint32 id)
 {
@@ -30,14 +30,14 @@ void ReqToDLdialog::RxDataFromMain(QHostAddress host_addr, QHostAddress addr, qu
     ui->labelIp->setText("from: " + addr_.toString() + ':' + tr("%1").arg(port_));
 }
 
-void ReqToDLdialog::on_pushButtonAccept_clicked()
+void RequestToDownloadDialog::on_pushButtonAccept_clicked()
 {
     emit Accept(host_addr_, addr_, port_, filename_, filesize_, id_);
     close();
 }
 
 
-void ReqToDLdialog::on_pushButtonDecline_clicked()
+void RequestToDownloadDialog::on_pushButtonDecline_clicked()
 {
     emit Decline();
     close();

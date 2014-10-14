@@ -9,7 +9,7 @@
 #include "senddialog.h"
 #include "configdialog.h"
 #include "reqtodldialog.h"
-#include "recieveprogressdialog.h"
+#include "receiveprogressdialog.h"
 
 namespace Ui {
 class MainWindow;

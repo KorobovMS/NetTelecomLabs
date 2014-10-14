@@ -5,19 +5,19 @@
 #include <QHostAddress>
 
 namespace Ui {
-class ReqToDLdialog;
+class RequestToDownloadDialog;
 }
 
-class ReqToDLdialog : public QDialog
+class RequestToDownloadDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ReqToDLdialog(QWidget *parent = 0);
-    ~ReqToDLdialog();
+    explicit RequestToDownloadDialog(QWidget *parent = 0);
+    ~RequestToDownloadDialog();
 
 private:
-    Ui::ReqToDLdialog *ui;
+    Ui::RequestToDownloadDialog *ui;
     QHostAddress host_addr_;
     QHostAddress addr_;
     quint16 port_;

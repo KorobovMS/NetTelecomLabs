@@ -13,18 +13,18 @@ class ConfigDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigDialog(QWidget *parent = 0);
+    explicit ConfigDialog(QWidget* parent = 0);
     ~ConfigDialog();
 
 private slots:
-    void on_pushButtonOk_clicked();
-    void on_pushButton_2_clicked();
+    void on_okButton_clicked();
+    void on_cancelButton_clicked();
 
 private:
-    Ui::ConfigDialog *ui;
+    Ui::ConfigDialog* ui_;
 
 signals:
-    void DataIsValid(QHostAddress Ip, quint16 Port);
+    void DataIsValid(QHostAddress ip, quint16 port);
 };
 
 #endif // CONFIGDIALOG_H

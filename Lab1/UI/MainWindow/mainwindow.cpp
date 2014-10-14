@@ -79,7 +79,7 @@ void MainWindow::NewRequest(QHostAddress host_addr, QHostAddress addr, quint16 p
                                  QString filename, quint64 filesize,
                                  quint32 id)
 {
-    ReqToDLdialog *R = new ReqToDLdialog(this);
+    RequestToDownloadDialog *R = new RequestToDownloadDialog(this);
     connect(this,
             SIGNAL(TxDataToReqDialog(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)),
             R,
@@ -103,7 +103,7 @@ void MainWindow::RecieveAcceptSlot(QHostAddress host_addr, QHostAddress addr, qu
                                    quint32 id)
 {
     qDebug() << "RecieveAcceptSlot" << addr << port;
-    RecieveProgressDialog *RProrg = new RecieveProgressDialog(this);
+    ReceiveProgressDialog *RProrg = new ReceiveProgressDialog(this);
 
     QThread* worker_thread = new QThread;
     ReceiveTransaction* rt = new ReceiveTransaction(host_addr, addr, port, filename, filesize, id);

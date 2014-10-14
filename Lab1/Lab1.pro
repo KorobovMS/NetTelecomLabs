@@ -11,34 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Lab1
 TEMPLATE = app
 
-
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    senddialog.cpp \
-    sendprogressdialog.cpp \
-    recieveprogressdialog.cpp \
-    configdialog.cpp \
-    reqtodldialog.cpp \
-    sendtransaction.cpp \
-    message.cpp \
-    receivetransaction.cpp \
-    server.cpp
-
-HEADERS  += mainwindow.h \
-    senddialog.h \
-    sendprogressdialog.h \
-    recieveprogressdialog.h \
-    configdialog.h \
-    reqtodldialog.h \
-    sendtransaction.h \
-    message.h \
-    helpers.h \
-    receivetransaction.h \
-    server.h
-
-FORMS    += mainwindow.ui \
-    senddialog.ui \
-    sendprogressdialog.ui \
-    configdialog.ui \
-    reqtodldialog.ui \
-    recieveprogressdialog.ui
+include(Logic/Logic.pri)
+include(Main/Main.pri)
+include(UI/UI.pri)

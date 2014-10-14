@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RecieveProgressDialog</class>
- <widget class="QDialog" name="RecieveProgressDialog">
+ <class>ReceiveProgressDialog</class>
+ <widget class="QDialog" name="ReceiveProgressDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

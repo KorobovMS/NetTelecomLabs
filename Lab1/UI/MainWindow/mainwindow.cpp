@@ -3,18 +3,21 @@
 
 #include <QThread>
 
+#include "configdialog.h"
 #include "helpers.h"
-#include "message.h"
+#include "receiveprogressdialog.h"
 #include "receivetransaction.h"
+#include "requesttodownloaddialog.h"
+#include "senddialog.h"
 #include "server.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui_(new Ui::MainWindow),
     ip_was_configured_(false)
 {
     ui_->setupUi(this);
-    this->setWindowTitle("UDP client/server");
+    this->setWindowTitle(tr("UDP client/server"));
     qRegisterMetaType<QHostAddress>("QHostAddress");
     on_actionConfigure_triggered();
 }
@@ -24,22 +27,22 @@ MainWindow::~MainWindow()
     delete ui_;
 }
 
-//Send
+// Send
 void MainWindow::on_actionSend_triggered()
 {
-    SendDialog *SendWindow = new SendDialog(this);
-    SendWindow->setModal(true);
-    SendWindow->exec();
+    SendDialog* send_window = new SendDialog(this);
+    send_window->setModal(true);
+    send_window->exec();
 }
 
-//config
+// Config
 void MainWindow::on_actionConfigure_triggered()
 {
-    ConfigDialog *Config = new ConfigDialog(this);
-    connect(Config, SIGNAL(DataIsValid(QHostAddress,quint16)),
+    ConfigDialog* config = new ConfigDialog(this);
+    connect(config, SIGNAL(DataIsValid(QHostAddress,quint16)),
             this, SLOT(IpAndPortConfigured(QHostAddress,quint16)));
-    Config->setModal(true);
-    Config->exec();
+    config->setModal(true);
+    config->exec();
 }
 
 void MainWindow::IpAndPortConfigured(const QHostAddress& ip, quint16 port)
@@ -56,57 +59,39 @@ void MainWindow::IpAndPortConfigured(const QHostAddress& ip, quint16 port)
 
     ui_->labelIp->setText(tr("Current Ip is: %1").arg(ip.toString()));
     ui_->labelPort->setText(tr("Current Port is: %1").arg(port));
-    qDebug() << "Conf" << ip << port;
-    QThread* server_thread = new QThread;
-    Server* server = new Server;
-    server->SetHostAddress(ip);
-    server->SetPort(port);
-    server->moveToThread(server_thread);
 
-    connect(server_thread, SIGNAL(started()),
-            server, SLOT(ServeForever()));
-
-    connect(server,
-            SIGNAL(NewRequest(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)),
-            this,
-            SLOT(NewRequest(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)));
-
-    server_thread->start();
+    RunServer();
 }
 
-//Recieve
-void MainWindow::NewRequest(QHostAddress host_addr, QHostAddress addr, quint16 port,
+// Recieve
+void MainWindow::NewRequest(QHostAddress host, QHostAddress addr, quint16 port,
                                  QString filename, quint64 filesize,
                                  quint32 id)
 {
-    RequestToDownloadDialog *R = new RequestToDownloadDialog(this);
+    RequestToDownloadDialog* confirm_dlg = new RequestToDownloadDialog(this);
     connect(this,
-            SIGNAL(TxDataToReqDialog(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)),
-            R,
-            SLOT(RxDataFromMain(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)));
-    emit TxDataToReqDialog(host_addr, addr, port, filename, filesize, id);
+            SIGNAL(DataToRequestDialog(QHostAddress,quint16,QString,quint64,quint32)),
+            confirm_dlg,
+            SLOT(RxDataFromMain(QHostAddress,quint16,QString,quint64,quint32)));
+    emit DataToRequestDialog(addr, port, filename, filesize, id);
 
-    connect(R,
-            SIGNAL(Accept(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)),
+    connect(confirm_dlg,
+            SIGNAL(Accept(quint32)),
             this,
-            SLOT(RecieveAcceptSlot(QHostAddress,QHostAddress,quint16,QString,quint64,quint32)));
+            SLOT(RecieveAcceptSlot(quint32)));
 
-    connect(R, SIGNAL(Decline()), this, SLOT(RecieveDeclineSlot()));
+    connect(confirm_dlg, SIGNAL(Decline(quint32)),
+            this, SLOT(RecieveDeclineSlot(quint32)));
 
-    R->show();
-    //R->setModal(true);
-    //R->exec();
+    confirm_dlg->show();
 }
 
-void MainWindow::RecieveAcceptSlot(QHostAddress host_addr, QHostAddress addr, quint16 port,
-                                   QString filename, quint64 filesize,
-                                   quint32 id)
+void MainWindow::RecieveAcceptSlot(quint32 id)
 {
-    qDebug() << "RecieveAcceptSlot" << addr << port;
-    ReceiveProgressDialog *RProrg = new ReceiveProgressDialog(this);
+    ReceiveProgressDialog* RProrg = new ReceiveProgressDialog(this);
 
     QThread* worker_thread = new QThread;
-    ReceiveTransaction* rt = new ReceiveTransaction(host_addr, addr, port, filename, filesize, id);
+    ReceiveTransaction* rt = new ReceiveTransaction(host, addr, port, filename, filesize, id);
 
     rt->moveToThread(worker_thread);
     connect(worker_thread, SIGNAL(started()),
@@ -126,8 +111,30 @@ void MainWindow::RecieveAcceptSlot(QHostAddress host_addr, QHostAddress addr, qu
     worker_thread->start();
 }
 
-void MainWindow::RecieveDeclineSlot()
+void MainWindow::RecieveDeclineSlot(quint32 id)
 {
+}
+
+// Server lifecycle
+void MainWindow::RunServer()
+{
+    QThread* server_thread = new QThread;
+    Server* server = new Server;
+    server->SetHostAddress(my_ip_);
+    server->SetPort(my_port_);
+    server->moveToThread(server_thread);
+
+    connect(server_thread, SIGNAL(started()),
+            server, SLOT(ServeForever()));
+
+    connect(server,
+            SIGNAL(NewRequest(QHostAddress,QHostAddress,quint16,
+                              QString,quint64,quint32)),
+            this,
+            SLOT(NewRequest(QHostAddress,QHostAddress,quint16,
+                            QString,quint64,quint32)));
+
+    server_thread->start();
 }
 
 void MainWindow::KillServer()

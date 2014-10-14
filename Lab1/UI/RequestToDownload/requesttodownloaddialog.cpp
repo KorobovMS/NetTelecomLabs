@@ -32,7 +32,6 @@ void RequestToDownloadDialog::on_pushButtonAccept_clicked()
     close();
 }
 
-
 void RequestToDownloadDialog::on_pushButtonDecline_clicked()
 {
     emit Decline(id_);

@@ -14,17 +14,15 @@
 
 SendDialog::SendDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SendDialog)
+    ui_(new Ui::SendDialog)
 {
-    ui->setupUi(this);
-    this->setWindowTitle("Chose file to send");
-    //QRegExp IpExp("");
-    //ui->lineEditIp->setValidator(new QRegExpValidator(IpExp, this));
+    ui_->setupUi(this);
+    this->setWindowTitle("Choose file to send");
 }
 
 SendDialog::~SendDialog()
 {
-    delete ui;
+    delete ui_;
 }
 
 void SendDialog::on_toolButtonFile_clicked()
@@ -32,23 +30,22 @@ void SendDialog::on_toolButtonFile_clicked()
     QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("Open File"),
-                "C:\\",
-                "All files (*.*);;Text File (*.txt)");
-    ui->lineEditFile->setText(filename);
+                ".",
+                "All files (*.*)");
+    ui_->lineEditFile->setText(filename);
 }
 
 void SendDialog::on_pushButtonOk_clicked()
 {
-    QString filename = ui->lineEditFile->text();
+    QString filename = ui_->lineEditFile->text();
     if (QFile::exists(filename))
     {
-        QHostAddress dest_ip = QHostAddress(ui->lineEditIp->text());
-        quint16 dest_port = ui->lineEditPort->text().toUShort();
+        QHostAddress dest_ip = QHostAddress(ui_->lineEditIp->text());
+        quint16 dest_port = ui_->lineEditPort->text().toUShort();
 
-        SendProgressDialog *Progr = new SendProgressDialog(this);
+        SendProgressDialog *progr = new SendProgressDialog(dest_ip, dest_port,
+                                                           filename, this);
         QThread* worker_thread = new QThread;
-        QFile* file = new QFile(filename);
-        file->moveToThread(worker_thread);
         SendTransaction* st = new SendTransaction(dest_ip, dest_port,
                                                   FilePtr(new QFile(filename)));
         st->moveToThread(worker_thread);
@@ -56,10 +53,10 @@ void SendDialog::on_pushButtonOk_clicked()
         connect(worker_thread, SIGNAL(started()),
                 st, SLOT(Go()));
         connect(st, SIGNAL(TransmissionStarted()),
-                Progr, SLOT(show()));
+                progr, SLOT(show()));
 
         connect(st, SIGNAL(TransmissionProgress(int,int)),
-                Progr, SLOT(Progress(int,int)));
+                progr, SLOT(Progress(int,int)));
 
         connect(st, SIGNAL(TransmissionFinished()),
                 worker_thread, SLOT(quit()));
@@ -70,17 +67,13 @@ void SendDialog::on_pushButtonOk_clicked()
 
         worker_thread->start();
 
-        connect(this, SIGNAL(TxDataToProgrDialog(QHostAddress,quint16,QString)),
-                Progr, SLOT(RxDataFromSendDialog(QHostAddress,quint16,QString)));
-        emit TxDataToProgrDialog(dest_ip, dest_port, filename);
-
         close();
     }
     else
     {
         QMessageBox msg;
-        msg.setText("Incorrect filepath");
-        msg.setWindowTitle("Error");
+        msg.setText(tr("Incorrect filepath"));
+        msg.setWindowTitle(tr("Error"));
         msg.exec();
     }
 }

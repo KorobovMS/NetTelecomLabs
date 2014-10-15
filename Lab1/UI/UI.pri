@@ -2,7 +2,7 @@ INCLUDEPATH += \
     $$PWD/Configure \
     $$PWD/MainWindow \
     $$PWD/ReceiveProgress \
-    $$PWD/RequestToDownload \
+    $$PWD/ConfirmUpload \
     $$PWD/Send \
     $$PWD/SendProgress
 
@@ -12,7 +12,7 @@ FORMS += \
     $$PWD/ReceiveProgress/receiveprogressdialog.ui \
     $$PWD/Send/senddialog.ui \
     $$PWD/SendProgress/sendprogressdialog.ui \
-    $$PWD/RequestToDownload/requesttodownloaddialog.ui
+    $$PWD/ConfirmUpload/confirmuploaddialog.ui
 
 HEADERS += \
     $$PWD/Configure/configdialog.h \
@@ -20,7 +20,7 @@ HEADERS += \
     $$PWD/ReceiveProgress/receiveprogressdialog.h \
     $$PWD/Send/senddialog.h \
     $$PWD/SendProgress/sendprogressdialog.h \
-    $$PWD/RequestToDownload/requesttodownloaddialog.h
+    $$PWD/ConfirmUpload/confirmuploaddialog.h
 
 SOURCES += \
     $$PWD/Configure/configdialog.cpp \
@@ -28,4 +28,4 @@ SOURCES += \
     $$PWD/ReceiveProgress/receiveprogressdialog.cpp \
     $$PWD/Send/senddialog.cpp \
     $$PWD/SendProgress/sendprogressdialog.cpp \
-    $$PWD/RequestToDownload/requesttodownloaddialog.cpp
+    $$PWD/ConfirmUpload/confirmuploaddialog.cpp

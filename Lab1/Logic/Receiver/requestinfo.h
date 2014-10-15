@@ -6,6 +6,9 @@
 
 struct RequestInfo
 {
+    RequestInfo()
+    {}
+
     RequestInfo(const QHostAddress& host_ip,
                 const QHostAddress& client_ip, quint16 client_port,
                 const QString& filename, quint64 filesize, quint32 id) :

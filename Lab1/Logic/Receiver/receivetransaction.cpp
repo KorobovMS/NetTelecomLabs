@@ -43,13 +43,13 @@ void ReceiveTransaction::Go()
 
 void ReceiveTransaction::SendId()
 {
-    QByteArray datagram;
-    QDataStream ds(&datagram, QIODevice::ReadWrite);
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::ReadWrite);
     QByteArray peer_info;
     QDataStream peer_info_stream(&peer_info, QIODevice::ReadWrite);
     peer_info_stream << socket_->localAddress() << socket_->localPort();
     ds << Message(State::Response::RESP_ID, 0, req_info_.id_, peer_info);
-    socket_->writeDatagram(datagram, req_info_.addr_, req_info_.port_);
+    socket_->writeDatagram(data, req_info_.client_ip_, req_info_.client_port_);
 }
 
 void ReceiveTransaction::ReceiveMessage()
@@ -68,7 +68,7 @@ void ReceiveTransaction::ReceiveMessage()
                 last_seq_ = msg.seq;
                 file_->write(msg.data.data(), msg.data.size());
                 bytes_received_ += msg.data.size();
-                emit Progress(bytes_received_, filesize_);
+                emit Progress(bytes_received_, req_info_.filesize_);
             }
             SendMessage(State::Response::RECV_DATA, msg.id, msg.seq);
         }
@@ -81,10 +81,10 @@ void ReceiveTransaction::ReceiveMessage()
 
 void ReceiveTransaction::SendMessage(quint32 state, quint32 id, quint32 seq)
 {
-    QByteArray datagram;
-    QDataStream stream(&datagram, QIODevice::ReadWrite);
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::ReadWrite);
     stream << Message(state, seq, id, QByteArray());
-    socket_->writeDatagram(datagram, req_info_.addr_, req_info_.port_);
+    socket_->writeDatagram(data, req_info_.client_ip_, req_info_.client_port_);
 }
 
 void ReceiveTransaction::SendFinish(Message& msg)

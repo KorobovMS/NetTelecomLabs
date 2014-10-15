@@ -12,6 +12,7 @@ Server::Server(QObject* parent) :
     port_(0),
     next_id_(1)
 {
+    qRegisterMetaType<RequestInfo>("RequestInfo");
 }
 
 void Server::SetHostAddress(const QHostAddress& addr)

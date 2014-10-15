@@ -14,20 +14,20 @@ class SendProgressDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SendProgressDialog(QWidget *parent = 0);
+    explicit SendProgressDialog(QHostAddress ip, quint16 port,
+                                QString filename, QWidget* parent = 0);
     ~SendProgressDialog();
 
 private slots:
     void on_pushButtonCancel_clicked();
 
 public slots:
-    void RxDataFromSendDialog(QHostAddress DestIp, quint16 DestPort, QString DestFile);
     void Progress(int bytes_sent, int bytes_total);
 
 signals:
 
 private:
-    Ui::SendProgressDialog *ui;
+    Ui::SendProgressDialog *ui_;
 };
 
 #endif // SENDPROGRESSDIALOG_H

@@ -5,6 +5,8 @@
 #include <QUdpSocket>
 #include <QVector>
 
+#include "requestinfo.h"
+
 struct Message;
 class QByteArray;
 class QUdpSocket;
@@ -16,9 +18,7 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction( QHostAddress host, QHostAddress addr, quint16 port,
-                        QString filename, quint64 filesize,
-                        quint32 id );
+    ReceiveTransaction(RequestInfo ri);
 
 signals:
     void StartReceiving();
@@ -34,13 +34,7 @@ private:
     void ReceiveMessage( );
     void SendFinish( Message& msg );
 
-    QHostAddress host_addr_;
-    QHostAddress addr_;
-    quint16 port_;
-    QString filename_;
-    quint64 filesize_;
-    quint32 id_;
-
+    RequestInfo req_info_;
     QUdpSocket* socket_;
     QFile* file_;
     quint32 last_seq_;

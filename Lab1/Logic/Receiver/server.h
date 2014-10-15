@@ -6,6 +6,7 @@
 #include <QUdpSocket>
 
 #include "message.h"
+#include "requestinfo.h"
 
 class Server : public QObject
 {
@@ -20,7 +21,8 @@ public:
 signals:
     void SocketBound(QHostAddress, quint16);
     void SocketNotBound();
-    void NewRequest(QHostAddress, QHostAddress, quint16, QString, quint64, quint32);
+    void NewRequest(RequestInfo);
+    void Dead();
 
 public slots:
     void ServeForever();

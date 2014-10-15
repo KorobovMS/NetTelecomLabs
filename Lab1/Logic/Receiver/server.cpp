@@ -83,6 +83,8 @@ void Server::ServeForever()
         socket_->waitForReadyRead(for_all_eternity);
         ProcessDatagrams();
     }
+
+    emit Dead();
 }
 
 void Server::ProcessDatagrams()
@@ -101,8 +103,8 @@ void Server::ProcessDatagrams()
             QString filename;
             quint64 filesize;
             RetrieveRequestInfo(msg, filename, filesize);
-            emit NewRequest(socket_->localAddress(), addr, port,
-                            filename, filesize, next_id_);
+            emit NewRequest(RequestInfo(socket_->localAddress(), addr, port,
+                            filename, filesize, next_id_));
             ++next_id_;
         }
         else if (msg.state == State::Request::KILL_YOURSELF)

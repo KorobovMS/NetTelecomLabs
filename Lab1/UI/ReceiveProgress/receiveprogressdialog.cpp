@@ -1,23 +1,26 @@
 #include "receiveprogressdialog.h"
 #include "ui_receiveprogressdialog.h"
 
-ReceiveProgressDialog::ReceiveProgressDialog(QWidget *parent) :
+ReceiveProgressDialog::ReceiveProgressDialog(QHostAddress addr, quint16 port,
+                                             QString name, QWidget* parent) :
     QDialog(parent),
-    ui(new Ui::ReceiveProgressDialog)
+    ui_(new Ui::ReceiveProgressDialog)
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
     this->setWindowTitle("Recieving");
+    ui_->labelFilename->setText(tr("Receiving %1").arg(name));
+    ui_->labelIp->setText(tr("From %1:%2").arg(addr.toString()).arg(port));
 }
 
 ReceiveProgressDialog::~ReceiveProgressDialog()
 {
-    delete ui;
+    delete ui_;
 }
 
 void ReceiveProgressDialog::Progress(int r, int t)
 {
     double percent = 100.0*r/t;
-    ui->progressBar->setValue(static_cast<int>(percent));
+    ui_->progressBar->setValue(static_cast<int>(percent));
 }
 
 void ReceiveProgressDialog::on_pushButtonCancel_clicked()

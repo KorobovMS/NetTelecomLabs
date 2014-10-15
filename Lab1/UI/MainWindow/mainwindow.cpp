@@ -84,10 +84,13 @@ void MainWindow::NewRequest(RequestInfo ri)
 
 void MainWindow::RecieveAcceptSlot(quint32 id)
 {
-    ReceiveProgressDialog* RProrg = new ReceiveProgressDialog(this);
+    RequestInfo ri = id2request_info_[id];
 
+    ReceiveProgressDialog* RProrg =
+            new ReceiveProgressDialog(ri.client_ip_, ri.client_port_,
+                                      ri.filename_, this);
     QThread* worker_thread = new QThread;
-    ReceiveTransaction* rt = new ReceiveTransaction(id2request_info_[id]);
+    ReceiveTransaction* rt = new ReceiveTransaction(ri);
     id2request_info_.remove(id);
     rt->moveToThread(worker_thread);
 

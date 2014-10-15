@@ -6,8 +6,6 @@
 
 typedef QSharedPointer<QFile> FilePtr;
 
-const QString DOWNLOADS("Downloads");
-
 namespace State
 {
 namespace Request

@@ -86,9 +86,7 @@ bool SendTransaction::RequestId()
         return false;
     }
 
-    qDebug() << "Old address" << addr_ << port_;
     MakePeerData(msg, addr_, port_);
-    qDebug() << "New address" << addr_ << port_;
     id_ = msg.id;
     return true;
 }

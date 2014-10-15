@@ -7,7 +7,7 @@
 #include "helpers.h"
 #include "receiveprogressdialog.h"
 #include "receivetransaction.h"
-#include "requesttodownloaddialog.h"
+#include "confirmuploaddialog.h"
 #include "senddialog.h"
 #include "server.h"
 
@@ -64,22 +64,18 @@ void MainWindow::IpAndPortConfigured(const QHostAddress& ip, quint16 port)
 }
 
 // Recieve
-void MainWindow::NewRequest(QHostAddress host, QHostAddress addr, quint16 port,
-                                 QString filename, quint64 filesize,
-                                 quint32 id)
+void MainWindow::NewRequest(RequestInfo ri)
 {
-    RequestToDownloadDialog* confirm_dlg = new RequestToDownloadDialog(this);
-    connect(this,
-            SIGNAL(DataToRequestDialog(QHostAddress,quint16,QString,quint64,quint32)),
-            confirm_dlg,
-            SLOT(RxDataFromMain(QHostAddress,quint16,QString,quint64,quint32)));
-    emit DataToRequestDialog(addr, port, filename, filesize, id);
+    ConfirmUploadDialog* confirm_dlg =
+            new ConfirmUploadDialog(ri.client_ip_, ri.client_port_,
+                                    ri.filename_, ri.filesize_, ri.id_, this);
+
+    id2request_info_.insert(ri.id_, ri);
 
     connect(confirm_dlg,
             SIGNAL(Accept(quint32)),
             this,
             SLOT(RecieveAcceptSlot(quint32)));
-
     connect(confirm_dlg, SIGNAL(Decline(quint32)),
             this, SLOT(RecieveDeclineSlot(quint32)));
 
@@ -91,28 +87,29 @@ void MainWindow::RecieveAcceptSlot(quint32 id)
     ReceiveProgressDialog* RProrg = new ReceiveProgressDialog(this);
 
     QThread* worker_thread = new QThread;
-    ReceiveTransaction* rt = new ReceiveTransaction(host, addr, port, filename, filesize, id);
-
+    ReceiveTransaction* rt = new ReceiveTransaction(id2request_info_[id]);
+    id2request_info_.remove(id);
     rt->moveToThread(worker_thread);
+
     connect(worker_thread, SIGNAL(started()),
             rt, SLOT(Go()));
-
     connect(rt, SIGNAL(StartReceiving()),
             RProrg, SLOT(show()));
     connect(rt, SIGNAL(Progress(int,int)),
             RProrg, SLOT(Progress(int,int)));
-
     connect(rt, SIGNAL(FinishReceiving()),
             worker_thread, SLOT(quit()));
     connect(worker_thread, SIGNAL(finished()),
             worker_thread, SLOT(deleteLater()));
     connect(worker_thread, SIGNAL(finished()),
             rt, SLOT(deleteLater()));
+
     worker_thread->start();
 }
 
 void MainWindow::RecieveDeclineSlot(quint32 id)
 {
+    id2request_info_.remove(id);
 }
 
 // Server lifecycle
@@ -126,13 +123,16 @@ void MainWindow::RunServer()
 
     connect(server_thread, SIGNAL(started()),
             server, SLOT(ServeForever()));
-
     connect(server,
-            SIGNAL(NewRequest(QHostAddress,QHostAddress,quint16,
-                              QString,quint64,quint32)),
+            SIGNAL(NewRequest(RequestInfo)),
             this,
-            SLOT(NewRequest(QHostAddress,QHostAddress,quint16,
-                            QString,quint64,quint32)));
+            SLOT(NewRequest(RequestInfo)));
+    connect(server, SIGNAL(Dead()),
+            server_thread, SLOT(quit()));
+    connect(server_thread, SIGNAL(finished()),
+            server_thread, SLOT(deleteLater()));
+    connect(server_thread, SIGNAL(finished()),
+            server, SLOT(deleteLater()));
 
     server_thread->start();
 }

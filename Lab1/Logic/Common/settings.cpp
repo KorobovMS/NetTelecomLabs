@@ -181,7 +181,7 @@ void Settings::ReadSettings()
 {
     settings_.clear();
 
-    QSettings settings(filename_);
+    QSettings settings(filename_, QSettings::IniFormat);
     QStringList keys = settings.allKeys();
     for (QStringList::iterator it = keys.begin(); it != keys.end(); ++it)
     {
@@ -197,10 +197,10 @@ void Settings::SafeSet(const QString& key, const QVariant& value)
         fsw_.removePath(filename_);
     }
 
-    QSettings settings(filename_);
+    QSettings settings(filename_, QSettings::IniFormat);
     settings.setValue(key, value);
     settings.sync();
-    settings_.insert(DOWNLOADS, downloads);
+    settings_.insert(key, value);
 
     if (is_tracking_)
     {

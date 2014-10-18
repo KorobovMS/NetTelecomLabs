@@ -1,16 +1,43 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <QFileSystemWatcher>
+#include <QHash>
+#include <QHostAddress>
 #include <QObject>
-#include <QSettings>
+#include <QString>
+#include <QVariant>
 
 class Settings : public QObject
 {
+    Q_OBJECT
+
 public:
-    Settings();
+    Settings(bool track = true, QObject* parent = 0);
+
+    bool GetIP(QHostAddress& ip) const;
+    bool GetPort(quint16& port) const;
+    void GetDownloads(QString& downloads);
+    void GetUdpMTU(int& mtu);
+    void GetMaxRetransmissions(int& retransmissions);
+    void GetTimeoutForSending(int& timeout);
+    void GetTimeoutForPermission(int& timeout);
+
+signals:
+    void SettingsChanged();
+
+private slots:
+    void ProcessFileChange(QString);
 
 private:
-    QSettings settings_;
+    void ReadSettings();
+    void SafeSet(const QString& key, const QVariant& value);
+
+private:
+    const QString filename_;
+    QHash<QString, QVariant> settings_;
+    QFileSystemWatcher fsw_;
+    bool is_tracking_;
 };
 
 #endif // SETTINGS_H

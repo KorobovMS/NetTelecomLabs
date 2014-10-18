@@ -16,7 +16,7 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
                                  int timeout_for_permission,
                                  int MTU,
                                  int max_retransmissions,
-                                 QObject *parent)
+                                 QObject* parent)
     : QObject(parent),
       timeout_for_sending_(timeout_for_sending),
       timeout_for_permission_(timeout_for_permission)
@@ -40,7 +40,6 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
 
 void SendTransaction::Go()
 {
-    qDebug() << "Start sending";
     socket_ = new QUdpSocket;
     connect(this->thread(), SIGNAL(finished()),
             socket_, SLOT(deleteLater()));

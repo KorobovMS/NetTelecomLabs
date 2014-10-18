@@ -25,7 +25,7 @@ public:
                     int timeout_for_permission = 60000,
                     int MTU = 512,
                     int max_retransmissions = 5,
-                    QObject *parent = 0);
+                    QObject* parent = 0);
 public slots:
     void Go();
 

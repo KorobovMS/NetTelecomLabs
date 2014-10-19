@@ -9,9 +9,10 @@
 #include "helpers.h"
 #include "message.h"
 
-ReceiveTransaction::ReceiveTransaction(RequestInfo ri) :
+ReceiveTransaction::ReceiveTransaction(RequestInfo ri, QString dir) :
     req_info_(ri),
-    is_active_(true)
+    is_active_(true),
+    dir_(dir)
 {
 }
 
@@ -22,7 +23,9 @@ void ReceiveTransaction::Go()
             socket_, SLOT(deleteLater()));
     socket_->bind(req_info_.host_ip_);
 
-    file_ = new QFile(req_info_.filename_);
+    QString filepath = QDir::cleanPath(
+                dir_ + QDir::separator() + req_info_.filename_);
+    file_ = new QFile(filepath);
     connect(this->thread(), SIGNAL(finished()),
             file_, SLOT(deleteLater()));
     file_->open(QIODevice::WriteOnly);

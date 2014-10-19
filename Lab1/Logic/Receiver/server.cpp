@@ -75,6 +75,7 @@ void Server::ServeForever()
     {
         qDebug() << "Server socket is not bound";
         emit SocketNotBound();
+        emit Dead();
         return;
     }
 
@@ -85,6 +86,7 @@ void Server::ServeForever()
         ProcessDatagrams();
     }
 
+    qDebug() << "Server is dead";
     emit Dead();
 }
 

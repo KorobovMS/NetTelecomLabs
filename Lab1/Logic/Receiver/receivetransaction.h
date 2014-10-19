@@ -18,7 +18,7 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction(RequestInfo ri);
+    ReceiveTransaction(RequestInfo ri, QString dir);
 
 signals:
     void StartReceiving();
@@ -35,6 +35,7 @@ private:
     void SendFinish( Message& msg );
 
     RequestInfo req_info_;
+    QString dir_;
     QUdpSocket* socket_;
     QFile* file_;
     quint32 last_seq_;

@@ -32,7 +32,7 @@ private:
 private slots:
     void on_pushButtonAccept_clicked();
     void on_pushButtonDecline_clicked();
-    void on_toolButton_clicked();
+    void on_toolButtonChooseDir_clicked();
 };
 
 

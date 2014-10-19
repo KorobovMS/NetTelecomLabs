@@ -44,7 +44,7 @@ void ConfirmUploadDialog::on_pushButtonDecline_clicked()
     close();
 }
 
-void ConfirmUploadDialog::on_toolButton_clicked()
+void ConfirmUploadDialog::on_toolButtonChooseDir_clicked()
 {
     QString first_dir;
     s_.GetDownloads(first_dir);

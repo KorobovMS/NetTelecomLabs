@@ -15,6 +15,9 @@ class Settings : public QObject
 public:
     Settings(bool track = true, QObject* parent = 0);
 
+    void SetIP(const QHostAddress& addr);
+    void SetPort(quint16 port);
+
     bool GetIP(QHostAddress& ip) const;
     bool GetPort(quint16& port) const;
     void GetDownloads(QString& downloads);

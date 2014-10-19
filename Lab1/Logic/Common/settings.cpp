@@ -23,13 +23,31 @@ Settings::Settings(bool track, QObject* parent) :
     filename_("settings.ini"),
     is_tracking_(track)
 {
+    QFile file(filename_);
+    if (!file.exists())
+    {
+        file.open(QIODevice::ReadWrite);
+        file.close();
+    }
+
     ReadSettings();
+
     if (is_tracking_)
     {
         fsw_.addPath(filename_);
         connect(&fsw_, SIGNAL(fileChanged(QString)),
                 this, SLOT(ProcessFileChange(QString)));
     }
+}
+
+void Settings::SetIP(const QHostAddress& addr)
+{
+    SafeSet(IP, addr.toString());
+}
+
+void Settings::SetPort(quint16 port)
+{
+    SafeSet(PORT, tr("%1").arg(port));
 }
 
 bool Settings::GetIP(QHostAddress& ip) const
@@ -48,8 +66,9 @@ bool Settings::GetPort(quint16& port) const
     {
         return false;
     }
-    int new_port = settings_.value(PORT, -1).toInt();
-    if (new_port < 0 || new_port > std::numeric_limits<quint16>::max())
+    bool ok;
+    int new_port = settings_.value(PORT).toInt(&ok);
+    if (!ok || new_port < 0 || new_port > std::numeric_limits<quint16>::max())
     {
         return false;
     }
@@ -61,7 +80,7 @@ void Settings::GetDownloads(QString& downloads)
 {
     if (!settings_.contains(DOWNLOADS))
     {
-        downloads = tr("./");
+        downloads = tr("./Downloads");
         SafeSet(DOWNLOADS, downloads);
     }
     else
@@ -69,7 +88,7 @@ void Settings::GetDownloads(QString& downloads)
         QString value = settings_.value(DOWNLOADS).toString();
         if (!QDir(value).exists())
         {
-            downloads = tr("./");
+            downloads = tr("./Downloads");
             SafeSet(DOWNLOADS, downloads);
         }
         else
@@ -89,8 +108,9 @@ void Settings::GetUdpMTU(int& mtu)
     }
     else
     {
-        int value = settings_.value(UDP_MTU).toInt();
-        if (value < min_mtu)
+        bool ok;
+        int value = settings_.value(UDP_MTU).toInt(&ok);
+        if (!ok || value < min_mtu)
         {
             mtu = min_mtu;
             SafeSet(UDP_MTU, mtu);
@@ -112,8 +132,9 @@ void Settings::GetMaxRetransmissions(int& retransmissions)
     }
     else
     {
-        int value = settings_.value(MAX_RETRANSMISSIONS).toInt();
-        if (value <= 0)
+        bool ok;
+        int value = settings_.value(MAX_RETRANSMISSIONS).toInt(&ok);
+        if (!ok || value <= 0)
         {
             retransmissions = standard_value;
             SafeSet(MAX_RETRANSMISSIONS, retransmissions);
@@ -135,8 +156,9 @@ void Settings::GetTimeoutForSending(int& timeout)
     }
     else
     {
-        int value = settings_.value(TIMEOUT_FOR_SENDING).toInt();
-        if (value <= 0)
+        bool ok;
+        int value = settings_.value(TIMEOUT_FOR_SENDING).toInt(&ok);
+        if (!ok || value <= 0)
         {
             timeout = standard_value;
             SafeSet(TIMEOUT_FOR_SENDING, timeout);
@@ -158,8 +180,9 @@ void Settings::GetTimeoutForPermission(int& timeout)
     }
     else
     {
-        int value = settings_.value(TIMEOUT_FOR_PERMISSION).toInt();
-        if (value <= 0)
+        bool ok;
+        int value = settings_.value(TIMEOUT_FOR_PERMISSION).toInt(&ok);
+        if (!ok || value <= 0)
         {
             timeout = standard_value;
             SafeSet(TIMEOUT_FOR_PERMISSION, timeout);

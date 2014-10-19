@@ -7,6 +7,7 @@
 #include <QUdpSocket>
 
 #include "requestinfo.h"
+#include "settings.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,11 +22,16 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionSend_triggered(); // File -> Send
-    void on_actionConfigure_triggered(); // Options -> Config
+    void on_actionSend_triggered();
+    void on_actionConfigure_triggered();
+    void on_actionKill_server_triggered();
+
     void IpAndPortConfigured(const QHostAddress& ip, quint16 port);
     void NewRequest(RequestInfo ri);
-    void RecieveAcceptSlot(quint32 id);
+    void OnServerStartRunning(QHostAddress addr, quint16 port);
+    void OnServerDead();
+    void Configure();
+    void RecieveAcceptSlot(quint32 id, QString dir);
     void RecieveDeclineSlot(quint32 id);
 
 private:
@@ -34,11 +40,13 @@ private:
 
 private:
     Ui::MainWindow* ui_;
+
     QHostAddress my_ip_;
     quint16 my_port_;
     QUdpSocket stop_socket_;
     bool ip_was_configured_;
     QHash<quint32, RequestInfo> id2request_info_;
+    Settings settings_;
 
     QString file_to_send_;
     QHostAddress ip_to_send_;

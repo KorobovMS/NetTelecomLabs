@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QHostAddress>
 
+#include "settings.h"
+
 namespace Ui {
 class ConfirmUploadDialog;
 }
@@ -19,16 +21,18 @@ public:
     ~ConfirmUploadDialog();
 
 signals:
-    void Accept(quint32 id);
+    void Accept(quint32 id, QString dir);
     void Decline(quint32 id);
 
 private:
     Ui::ConfirmUploadDialog* ui_;
     quint32 id_;
+    Settings s_;
 
 private slots:
     void on_pushButtonAccept_clicked();
     void on_pushButtonDecline_clicked();
+    void on_toolButton_clicked();
 };
 
 

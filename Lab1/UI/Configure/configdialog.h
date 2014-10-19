@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QHostAddress>
 
+#include "settings.h"
+
 namespace Ui {
 class ConfigDialog;
 }
@@ -25,6 +27,7 @@ private slots:
 
 private:
     Ui::ConfigDialog* ui_;
+    Settings s_;
 };
 
 #endif // CONFIGDIALOG_H

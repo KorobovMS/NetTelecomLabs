@@ -64,6 +64,11 @@ void SendDialog::on_pushButtonOk_clicked()
                 worker_thread, SLOT(quit()));
         connect(st, SIGNAL(TransmissionCancelled()),
                 this, SLOT(TransmissionCancelled()));
+        connect(st, SIGNAL(TransmissionFailed(quint32)),
+                worker_thread, SLOT(quit()));
+        connect(st, SIGNAL(TransmissionFailed(quint32)),
+                this, SLOT(TransmissionFailed(quint32)));
+
         connect(worker_thread, SIGNAL(finished()),
                 worker_thread, SLOT(deleteLater()));
         connect(worker_thread, SIGNAL(finished()),
@@ -92,5 +97,13 @@ void SendDialog::TransmissionCancelled()
     QMessageBox mb;
     mb.setWindowTitle(tr("Warning"));
     mb.setText("File transmission was cancelled");
+    mb.exec();
+}
+
+void SendDialog::TransmissionFailed(quint32 code)
+{
+    QMessageBox mb;
+    mb.setWindowTitle(tr("Error"));
+    mb.setText(tr("File transmission failed with error code %1").arg(code));
     mb.exec();
 }

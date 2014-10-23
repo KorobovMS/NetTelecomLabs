@@ -21,6 +21,7 @@ private slots:
     void on_pushButtonOk_clicked();
     void on_pushButtonCancel_clicked();
     void TransmissionCancelled();
+    void TransmissionFailed(quint32);
 
 private:
     Ui::SendDialog *ui_;

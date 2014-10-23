@@ -8,19 +8,21 @@
 
 #include "helpers.h"
 #include "message.h"
+#include "settings.h"
 
 SendTransaction::SendTransaction(const QHostAddress& addr,
                                  quint16 port,
                                  FilePtr file,
-                                 int timeout_for_sending,
-                                 int timeout_for_permission,
-                                 int MTU,
-                                 int max_retransmissions,
                                  QObject* parent)
-    : QObject(parent),
-      timeout_for_sending_(timeout_for_sending),
-      timeout_for_permission_(timeout_for_permission)
+    : QObject(parent)
 {
+    Settings s;
+    int MTU;
+    s.GetUdpMTU(MTU);
+    s.GetMaxRetransmissions(max_retransmissions_);
+    s.GetTimeoutForSending(timeout_for_sending_);
+    s.GetTimeoutForPermission(timeout_for_permission_);
+
     // For explanation see "Serializing Qt Data Types" in docs
     typedef quint32 ByteArrayLengthType;
 
@@ -29,7 +31,6 @@ SendTransaction::SendTransaction(const QHostAddress& addr,
             sizeof(ByteArrayLengthType) -
             sizeof(Message::id) -
             sizeof(Message::seq);
-    max_retransmissions_ = max_retransmissions;
     addr_ = addr;
     port_ = port;
     file_ = file;

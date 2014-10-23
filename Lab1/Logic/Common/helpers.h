@@ -22,6 +22,7 @@ namespace Response
 const quint32 RESP_ID = 1;
 const quint32 RECV_DATA = 4;
 const quint32 RECV_FINISH = 7;
+const quint32 TRANSMISSION_DECLINED = 10;
 }
 
 namespace Error

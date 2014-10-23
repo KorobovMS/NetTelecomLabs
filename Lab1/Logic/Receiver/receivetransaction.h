@@ -18,24 +18,28 @@ class ReceiveTransaction : public QObject
     Q_OBJECT
 
 public:
-    ReceiveTransaction(RequestInfo ri, QString dir);
+    ReceiveTransaction(RequestInfo ri, QString dir, bool is_cancelled = false);
 
 signals:
     void StartReceiving();
     void Progress( int bytes_received, int bytes_total );
     void FinishReceiving();
+    void TimeOut();
+    void Cancelled();
 
 private slots:
     void Go( );
 
 private:
     void SendId();
+    void CancelTransaction();
     void SendMessage( quint32 state, quint32 id, quint32 seq );
     void ReceiveMessage( );
     void SendFinish( Message& msg );
 
     RequestInfo req_info_;
     QString dir_;
+    bool is_cancelled_;
     QUdpSocket* socket_;
     QFile* file_;
     quint32 last_seq_;

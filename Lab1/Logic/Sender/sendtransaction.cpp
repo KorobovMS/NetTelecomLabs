@@ -48,7 +48,6 @@ void SendTransaction::Go()
     timeout_ = timeout_for_permission_;
     if (!RequestId())
     {
-        emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
         return;
     }
 
@@ -76,12 +75,26 @@ bool SendTransaction::RequestId()
     MakeFileData(fileData);
     if (!TransmitMessage(State::Request::REQUEST_PERMISSION, fileData))
     {
+        emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
         return false;
     }
 
     Message msg;
-    if (!ReceiveMessage(msg) || msg.state != State::Response::RESP_ID)
+    if (!ReceiveMessage(msg))
     {
+        emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
+        return false;
+    }
+
+    if (msg.state == State::Response::TRANSMISSION_DECLINED)
+    {
+        emit TransmissionCancelled();
+        return false;
+    }
+
+    if (msg.state != State::Response::RESP_ID)
+    {
+        emit TransmissionFailed(State::Error::ID_RECEIVING_FAILED);
         return false;
     }
 

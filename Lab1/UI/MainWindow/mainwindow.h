@@ -33,6 +33,7 @@ private slots:
     void Configure();
     void RecieveAcceptSlot(quint32 id, QString dir);
     void RecieveDeclineSlot(quint32 id);
+    void CannotReceiveFile();
 
 private:
     void RunServer();

@@ -34,6 +34,7 @@ signals:
     void TransmissionProgress(int sent, int total);
     void TransmissionFinished();
     void TransmissionFailed(quint32 error_code);
+    void TransmissionCancelled();
 
 private:
     void ProcessTransaction();

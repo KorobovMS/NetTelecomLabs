@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMessageBox>
 #include <QThread>
 
 #include "configdialog.h"
@@ -41,7 +42,6 @@ void MainWindow::Configure()
     }
     else
     {
-        //on_actionKill_server_triggered();
         on_actionConfigure_triggered();
     }
 }
@@ -135,11 +135,18 @@ void MainWindow::RecieveAcceptSlot(quint32 id, QString dir)
 
     connect(worker_thread, SIGNAL(started()),
             rt, SLOT(Go()));
+
     connect(rt, SIGNAL(StartReceiving()),
             RProrg, SLOT(show()));
     connect(rt, SIGNAL(Progress(int,int)),
             RProrg, SLOT(Progress(int,int)));
+
+
     connect(rt, SIGNAL(FinishReceiving()),
+            worker_thread, SLOT(quit()));
+    connect(rt, SIGNAL(TimeOut()),
+            this, SLOT(CannotReceiveFile()));
+    connect(rt, SIGNAL(TimeOut()),
             worker_thread, SLOT(quit()));
     connect(worker_thread, SIGNAL(finished()),
             worker_thread, SLOT(deleteLater()));
@@ -151,7 +158,31 @@ void MainWindow::RecieveAcceptSlot(quint32 id, QString dir)
 
 void MainWindow::RecieveDeclineSlot(quint32 id)
 {
+    RequestInfo ri = id2request_info_[id];
+
+    QThread* worker_thread = new QThread;
+    ReceiveTransaction* cancel_tr = new ReceiveTransaction(ri, tr(""), true);
     id2request_info_.remove(id);
+    cancel_tr->moveToThread(worker_thread);
+
+    connect(worker_thread, SIGNAL(started()),
+            cancel_tr, SLOT(Go()));
+    connect(cancel_tr, SIGNAL(Cancelled()),
+            worker_thread, SLOT(quit()));
+    connect(worker_thread, SIGNAL(finished()),
+            cancel_tr, SLOT(deleteLater()));
+    connect(worker_thread, SIGNAL(finished()),
+            worker_thread, SLOT(deleteLater()));
+
+    worker_thread->start();
+}
+
+void MainWindow::CannotReceiveFile()
+{
+    QMessageBox mb(QMessageBox::Warning, tr("Time is out"),
+            tr("File cannot be received because of timeout"),
+            QMessageBox::Ok);
+    mb.exec();
 }
 
 // Server lifecycle

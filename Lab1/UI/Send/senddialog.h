@@ -20,6 +20,7 @@ private slots:
     void on_toolButtonFile_clicked();
     void on_pushButtonOk_clicked();
     void on_pushButtonCancel_clicked();
+    void TransmissionCancelled();
 
 private:
     Ui::SendDialog *ui_;

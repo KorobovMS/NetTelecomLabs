@@ -52,14 +52,18 @@ void SendDialog::on_pushButtonOk_clicked()
 
         connect(worker_thread, SIGNAL(started()),
                 st, SLOT(Go()));
+
         connect(st, SIGNAL(TransmissionStarted()),
                 progr, SLOT(show()));
-
         connect(st, SIGNAL(TransmissionProgress(int,int)),
                 progr, SLOT(Progress(int,int)));
 
         connect(st, SIGNAL(TransmissionFinished()),
                 worker_thread, SLOT(quit()));
+        connect(st, SIGNAL(TransmissionCancelled()),
+                worker_thread, SLOT(quit()));
+        connect(st, SIGNAL(TransmissionCancelled()),
+                this, SLOT(TransmissionCancelled()));
         connect(worker_thread, SIGNAL(finished()),
                 worker_thread, SLOT(deleteLater()));
         connect(worker_thread, SIGNAL(finished()),
@@ -81,4 +85,12 @@ void SendDialog::on_pushButtonOk_clicked()
 void SendDialog::on_pushButtonCancel_clicked()
 {
     close();
+}
+
+void SendDialog::TransmissionCancelled()
+{
+    QMessageBox mb;
+    mb.setWindowTitle(tr("Warning"));
+    mb.setText("File transmission was cancelled");
+    mb.exec();
 }

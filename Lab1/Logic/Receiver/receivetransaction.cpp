@@ -9,10 +9,12 @@
 #include "helpers.h"
 #include "message.h"
 
-ReceiveTransaction::ReceiveTransaction(RequestInfo ri, QString dir) :
+ReceiveTransaction::ReceiveTransaction(RequestInfo ri, QString dir,
+                                       bool is_cancelled) :
     req_info_(ri),
     is_active_(true),
-    dir_(dir)
+    dir_(dir),
+    is_cancelled_(is_cancelled)
 {
 }
 
@@ -30,18 +32,29 @@ void ReceiveTransaction::Go()
             file_, SLOT(deleteLater()));
     file_->open(QIODevice::WriteOnly);
 
+    if (is_cancelled_)
+    {
+        CancelTransaction();
+        emit Cancelled();
+        return;
+    }
+
     SendId();
     last_seq_ = 0;
     bytes_received_ = 0;
 
     emit StartReceiving();
 
-    const int for_all_eternity = -1;    
     while (is_active_)
     {
-        socket_->waitForReadyRead(for_all_eternity);
+        if (!socket_->waitForReadyRead())
+        {
+            emit TimeOut();
+            return;
+        }
         ReceiveMessage();
     }
+    emit FinishReceiving();
 }
 
 void ReceiveTransaction::SendId()
@@ -53,6 +66,16 @@ void ReceiveTransaction::SendId()
     peer_info_stream << socket_->localAddress() << socket_->localPort();
     ds << Message(State::Response::RESP_ID, 0, req_info_.id_, peer_info);
     socket_->writeDatagram(data, req_info_.client_ip_, req_info_.client_port_);
+}
+
+void ReceiveTransaction::CancelTransaction()
+{
+    QByteArray datagram;
+    QDataStream ds(&datagram, QIODevice::ReadWrite);
+    ds << Message(State::Response::TRANSMISSION_DECLINED, 0,
+                  req_info_.id_, QByteArray());
+    socket_->writeDatagram(datagram,
+                           req_info_.client_ip_, req_info_.client_port_);
 }
 
 void ReceiveTransaction::ReceiveMessage()
@@ -93,7 +116,6 @@ void ReceiveTransaction::SendMessage(quint32 state, quint32 id, quint32 seq)
 void ReceiveTransaction::SendFinish(Message& msg)
 {
     is_active_ = false;
-    emit FinishReceiving();
     QByteArray data;
     QDataStream ds(&data, QIODevice::ReadWrite);
     ds << Message(State::Response::RECV_FINISH, msg.seq, msg.id, QByteArray());

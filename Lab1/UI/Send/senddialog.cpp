@@ -18,6 +18,10 @@ SendDialog::SendDialog(QWidget *parent) :
 {
     ui_->setupUi(this);
     this->setWindowTitle("Choose file to send");
+
+    QRegExp re("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}"
+                 "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])");
+    ui_->lineEditIp->setValidator(new QRegExpValidator(re));
 }
 
 SendDialog::~SendDialog()
@@ -41,7 +45,16 @@ void SendDialog::on_pushButtonOk_clicked()
     if (QFile::exists(filename))
     {
         QHostAddress dest_ip = QHostAddress(ui_->lineEditIp->text());
-        quint16 dest_port = ui_->lineEditPort->text().toUShort();
+        bool ok;
+        quint16 dest_port = ui_->lineEditPort->text().toUShort(&ok);
+        if (!ok)
+        {
+            QMessageBox mb;
+            mb.setWindowTitle(tr("Error"));
+            mb.setText(tr("Port is not valid!"));
+            mb.exec();
+            return;
+        }
 
         SendProgressDialog *progr = new SendProgressDialog(dest_ip, dest_port,
                                                            filename, this);

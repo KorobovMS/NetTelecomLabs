@@ -56,10 +56,10 @@
       <item>
        <widget class="QLineEdit" name="lineEditIp">
         <property name="inputMask">
-         <string>000.000.000.000;_</string>
+         <string/>
         </property>
         <property name="text">
-         <string>...</string>
+         <string/>
         </property>
        </widget>
       </item>

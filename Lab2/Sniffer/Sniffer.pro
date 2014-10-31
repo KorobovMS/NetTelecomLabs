@@ -14,5 +14,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+LIBS += -lws2_32
 
-SOURCES += main.cpp
+include(Logic/Logic.pri)
+include(Console/Console.pri)

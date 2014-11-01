@@ -59,10 +59,12 @@ int main(int argc, char *argv[])
 
     const int SIZE = 0x10000;
     char* buffer = new char[SIZE];
+    int i = 0;
     while (!kbhit())
     {
         int count = recv(s, buffer, SIZE, 0);
-        printf("IP %d\n", count);
+        printf("%d) IP %d\n", i, count);
+        ++i;
     }
     delete buffer;
 

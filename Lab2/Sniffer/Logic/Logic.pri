@@ -1,3 +1,7 @@
+INCLUDEPATH += \
+    $$PWD/Filter \
+    $$PWD/Listener
+
 HEADERS += \
     $$PWD/Filter/filter.h \
     $$PWD/Listener/listener.h

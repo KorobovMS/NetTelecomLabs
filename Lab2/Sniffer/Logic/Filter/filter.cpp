@@ -5,7 +5,7 @@
 Filter::Filter(const QJsonObject& obj, QObject* parent) :
     QObject(parent)
 {
-    id_ = obj["name"];
+    id_ = obj["name"].toString();
     StringsToSet(obj["protocols"].toArray(), protocols_);
     HostsToSet(obj["from"].toArray(), from_);
     HostsToSet(obj["to"].toArray(), to_);

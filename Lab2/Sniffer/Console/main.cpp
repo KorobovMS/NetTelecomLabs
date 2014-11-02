@@ -1,75 +1,31 @@
-#include <QCoreApplication>
 #include <conio.h>
 #include <cstring>
+#include <cstdio>
 
-#include <winsock2.h>
+#include "winsock.h"
+#include "listener.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-
-    const int major_version = 2;
-    const int minor_version = 2;
-    WSADATA wsadata;
-    if (WSAStartup(MAKEWORD(major_version, minor_version), &wsadata))
+    WinSock ws;
+    if (!ws.IsInitialized())
     {
-        return WSAGetLastError();
+        printf("WinSock cannot be initialized\n");
+        return 1;
     }
 
-    if (LOBYTE(wsadata.wVersion) != minor_version ||
-            HIBYTE(wsadata.wVersion) != major_version)
+    Listener listener;
+    if (!listener.Initialize())
     {
-        return WSAGetLastError();
+        printf("Cannot listen to network adapter\n");
+        return 2;
     }
 
-    char name[128];
-    if (gethostname(name, sizeof(name)))
-    {
-        WSACleanup();
-        return WSAGetLastError();
-    }
-
-    HOSTENT* he = gethostbyname(name);
-
-    SOCKADDR_IN sa;
-    memset(&sa, 0, sizeof(sa));
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = ((struct in_addr*)he->h_addr_list[0])->s_addr;
-
-    SOCKET s = socket(AF_INET, SOCK_RAW, IPPROTO_IP);
-    if (s == INVALID_SOCKET)
-    {
-        WSACleanup();
-        return WSAGetLastError();
-    }
-    if (bind(s, (SOCKADDR*)&sa, sizeof(SOCKADDR)))
-    {
-        closesocket(s);
-        WSACleanup();
-        return WSAGetLastError();
-    }
-
-    unsigned long flag = 1;
-    if (ioctlsocket(s, 0x98000001, &flag))
-    {
-        closesocket(s);
-        WSACleanup();
-        return WSAGetLastError();
-    }
-
-    const int SIZE = 0x10000;
-    char* buffer = new char[SIZE];
-    int i = 0;
     while (!kbhit())
     {
-        int count = recv(s, buffer, SIZE, 0);
-        printf("%d) IP %d\n", i, count);
-        ++i;
+        QByteArray datagram = listener.Receive();
+        printf("IP %d\n", datagram.size());
     }
-    delete buffer;
-
-    closesocket(s);
-    WSACleanup();
 
     return 0;
 }

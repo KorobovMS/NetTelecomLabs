@@ -2,8 +2,12 @@
 #include <cstring>
 #include <cstdio>
 
-#include "winsock.h"
+#include <QHostAddress>
+
+#include "ippacket.h"
 #include "listener.h"
+#include "parsers.h"
+#include "winsock.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +28,10 @@ int main(int argc, char *argv[])
     while (!kbhit())
     {
         QByteArray datagram = listener.Receive();
-        printf("IP %d\n", datagram.size());
+        IPPacket ip = ParseIP(datagram);
+        qDebug() << QHostAddress(ip.src_addr)
+                 << QHostAddress(ip.dst_addr)
+                 << ip.proto;
     }
 
     return 0;

@@ -1,28 +1,52 @@
 #include "filter.h"
 
-#include <QJsonValue>
-
-Filter::Filter(const QJsonObject& obj, QObject* parent) :
-    QObject(parent)
+Filter::Filter(QObject* parent) :
+    QObject(parent),
+    is_raw_applied_(false)
 {
-    id_ = obj["name"].toString();
-    StringsToSet(obj["protocols"].toArray(), protocols_);
-    HostsToSet(obj["from"].toArray(), from_);
-    HostsToSet(obj["to"].toArray(), to_);
 }
 
-void Filter::StringsToSet(const QJsonArray& array, Protocols& set)
+bool Filter::Apply(const IPPacket& packet) const
 {
-    for (QJsonArray::const_iterator i = array.begin(); i != array.end(); ++i)
+    if (!protocols_.empty() && !protocols_.contains(packet.proto))
     {
-        set.insert((*i).toString());
+        return false;
     }
+
+    if (!from_.empty() && !from_.contains(QHostAddress(packet.src_addr)))
+    {
+        return false;
+    }
+
+    if (!to_.empty() && !to_.contains(QHostAddress(packet.dst_addr)))
+    {
+        return false;
+    }
+
+    return true;
 }
 
-void Filter::HostsToSet(const QJsonArray& array, Addresses& set)
+bool Filter::IsRawApplied() const
 {
-    for (QJsonArray::const_iterator i = array.begin(); i != array.end(); ++i)
-    {
-        set.insert(QHostAddress((*i).toString()));
-    }
+    return is_raw_applied_;
+}
+
+void Filter::AddProtocol(quint8 protocol)
+{
+    protocols_.insert(protocol);
+}
+
+void Filter::AddFrom(const QHostAddress& from)
+{
+    from_.insert(from);
+}
+
+void Filter::AddTo(const QHostAddress& to)
+{
+    to_.insert(to);
+}
+
+void Filter::AddRawFormat()
+{
+    is_raw_applied_ = true;
 }

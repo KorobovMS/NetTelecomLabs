@@ -3,7 +3,7 @@
 
 #include <qglobal.h>
 
-struct ip_header
+struct IPHeader
 {
     quint8 ver_ihl; // version + internet header length
     quint8 tos; // diff services code point + explicit congestion notification

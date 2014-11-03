@@ -6,7 +6,7 @@ INCLUDEPATH += \
 HEADERS += \
     $$PWD/Filter/filter.h \
     $$PWD/Listener/listener.h \
-    $$PWD/Headers/ip_header.h
+    $$PWD/Headers/ipheader.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \

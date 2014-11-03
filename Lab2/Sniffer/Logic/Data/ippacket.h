@@ -2,8 +2,9 @@
 #define IP_HEADER_H
 
 #include <qglobal.h>
+#include <QByteArray>
 
-struct IPHeader
+struct IPPacket
 {
     quint8 ver_ihl; // version + internet header length
     quint8 tos; // diff services code point + explicit congestion notification
@@ -15,6 +16,7 @@ struct IPHeader
     quint16 crc; // header's CRC
     quint32 src_addr; // source address
     quint32 dst_addr; // destination address
+    QByteArray data; // IP data
 };
 
 #endif // IP_HEADER_H

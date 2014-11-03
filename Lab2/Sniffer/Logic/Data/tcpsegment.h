@@ -2,8 +2,9 @@
 #define TCPHEADER_H
 
 #include <qglobal.h>
+#include <QByteArray>
 
-struct TCPHeader
+struct TCPSegment
 {
     quint16 src_port; // source port
     quint16 dst_port; // destination port
@@ -14,6 +15,7 @@ struct TCPHeader
     quint16 win; // window size
     quint16 crc; // header's CRC
     quint16 padding; // urgent pointer
+    QByteArray data; // TCP data
 };
 
 #endif // TCPHEADER_H

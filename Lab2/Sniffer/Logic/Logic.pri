@@ -1,16 +1,18 @@
 INCLUDEPATH += \
     $$PWD/Filter \
     $$PWD/Listener \
-    $$PWD/Headers
+    $$PWD/Data
 
 HEADERS += \
     $$PWD/Filter/filter.h \
     $$PWD/Listener/listener.h \
-    $$PWD/Headers/ipheader.h \
-    $$PWD/Headers/tcpheader.h \
-    $$PWD/Headers/udpheader.h \
-    $$PWD/headers/icmpheader.h
+    $$PWD/Parsers/parsers.h \
+    $$PWD/Data/ippacket.h \
+    $$PWD/Data/tcpsegment.h \
+    $$PWD/Data/icmpsegment.h \
+    $$PWD/Data/udpsegment.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
-    $$PWD/Listener/listener.cpp
+    $$PWD/Listener/listener.cpp \
+    $$PWD/Parsers/parsers.cpp

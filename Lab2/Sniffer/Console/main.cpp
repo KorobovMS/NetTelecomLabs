@@ -7,7 +7,6 @@
 
 int main()
 {
-    DatagramProcessor processor;
     WinSock ws;
     if (!ws.IsInitialized())
     {
@@ -22,6 +21,7 @@ int main()
         return 2;
     }
 
+    DatagramProcessor processor;
     while (!kbhit())
     {
         QByteArray datagram = listener.Receive();

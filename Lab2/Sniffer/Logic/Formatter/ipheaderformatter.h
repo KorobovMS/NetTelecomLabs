@@ -4,6 +4,9 @@
 #include "formatter.h"
 #include "ippacket.h"
 
+/**
+ * @brief The IPHeaderFormatter class constructs string with IP header fields
+ */
 class IPHeaderFormatter : public Formatter
 {
 public:

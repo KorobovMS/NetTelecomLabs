@@ -13,6 +13,10 @@ HexDataFormatter::HexDataFormatter(const QByteArray& data)
                   .arg(static_cast<quint8>(*it), 2, 16, QChar('0'))
                   .toUpper();
         ++number_in_raw;
+        if (number_in_raw == max_number_in_raw/2)
+        {
+            stream << "  ";
+        }
         if (number_in_raw == max_number_in_raw)
         {
             number_in_raw = 0;

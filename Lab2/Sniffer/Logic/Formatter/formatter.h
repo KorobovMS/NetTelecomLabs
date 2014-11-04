@@ -3,6 +3,9 @@
 
 #include <QString>
 
+/**
+ * @brief The Formatter class is base class for formatting data
+ */
 class Formatter
 {
 public:

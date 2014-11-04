@@ -6,6 +6,13 @@
 
 #include "ippacket.h"
 
+/**
+ * @brief The Filter class is responsible for IP packet filtering by
+ *        source and destination addresses. It has a link to Writer class,
+ *        which is available through GetWriter.
+ *        User can set addresses, writer and the ability to successfully
+ *        filter raw data.
+ */
 class Filter
 {
 public:

@@ -4,6 +4,10 @@
 #include <QByteArray>
 #include "formatter.h"
 
+/**
+ * @brief The HexDataFormatter class constructs string with a table of hex data
+ *        with 16 bytes in raw
+ */
 class HexDataFormatter : public Formatter
 {
 public:

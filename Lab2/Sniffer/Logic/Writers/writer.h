@@ -3,6 +3,9 @@
 
 #include <QString>
 
+/**
+ * @brief The Writer class is a base class for writing capability
+ */
 class Writer
 {
 public:

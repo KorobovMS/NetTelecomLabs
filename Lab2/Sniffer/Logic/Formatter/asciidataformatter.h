@@ -3,6 +3,9 @@
 
 #include "formatter.h"
 
+/**
+ * @brief The AsciiDataFormatter class converts QByteArray to ascii string
+ */
 class AsciiDataFormatter : public Formatter
 {
 public:

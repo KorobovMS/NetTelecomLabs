@@ -4,6 +4,9 @@
 #include "formatter.h"
 #include "udpsegment.h"
 
+/**
+ * @brief The UDPHeaderFormatter class constructs string with UDP header fields
+ */
 class UDPHeaderFormatter : public Formatter
 {
 public:

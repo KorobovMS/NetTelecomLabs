@@ -4,6 +4,10 @@
 #include "formatter.h"
 #include "icmpsegment.h"
 
+/**
+ * @brief The ICMPHeaderFormatter class constructs string
+ *        with ICMP header fields
+ */
 class ICMPHeaderFormatter : public Formatter
 {
 public:

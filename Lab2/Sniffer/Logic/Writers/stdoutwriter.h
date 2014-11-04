@@ -4,6 +4,9 @@
 #include <QTextStream>
 #include "writer.h"
 
+/**
+ * @brief The StdoutWriter class writes string to stdout
+ */
 class StdoutWriter : public Writer
 {
 public:

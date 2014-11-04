@@ -4,6 +4,9 @@
 #include "formatter.h"
 #include "tcpsegment.h"
 
+/**
+ * @brief The TCPHeaderFormatter class constructs string with TCP header fields
+ */
 class TCPHeaderFormatter : public Formatter
 {
 public:

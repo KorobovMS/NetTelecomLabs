@@ -5,6 +5,9 @@
 #include <QTextStream>
 #include "writer.h"
 
+/**
+ * @brief The FileWriter class writes string to file specified in ctor
+ */
 class FileWriter : public Writer
 {
 public:

@@ -4,6 +4,10 @@
 #include <qglobal.h>
 #include <QByteArray>
 
+/**
+ * @brief The UDPSegment struct contains header and data sections
+ *        of UDP segment
+ */
 struct UDPSegment
 {
     quint16 src_port; // source port

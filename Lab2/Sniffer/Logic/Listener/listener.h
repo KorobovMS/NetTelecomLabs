@@ -5,6 +5,9 @@
 
 #include <QByteArray>
 
+/**
+ * @brief The Listener class encapsulates Raw Socket.
+ */
 class Listener
 {
 public:

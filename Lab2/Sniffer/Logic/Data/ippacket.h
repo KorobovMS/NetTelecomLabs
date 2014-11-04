@@ -4,6 +4,9 @@
 #include <qglobal.h>
 #include <QByteArray>
 
+/**
+ * Supported protocols. See list of IP protocol numbers
+ */
 namespace Protocols
 {
 const quint8 ICMP = 0x01;
@@ -11,6 +14,9 @@ const quint8 TCP = 0x06;
 const quint8 UDP = 0x11;
 }
 
+/**
+ * @brief The IPPacket struct contains header and data sections of IP packet
+ */
 struct IPPacket
 {
     quint8 ver_ihl; // version + internet header length

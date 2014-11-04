@@ -4,6 +4,10 @@
 #include <qglobal.h>
 #include <QByteArray>
 
+/**
+ * @brief The TCPSegment struct contains header and data sections
+ *        of TCP segment
+ */
 struct TCPSegment
 {
     quint16 src_port; // source port

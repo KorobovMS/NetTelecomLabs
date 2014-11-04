@@ -9,6 +9,10 @@ class Writer;
 
 typedef QSharedPointer<Writer> WriterPtr;
 
+/**
+ * @brief The WritersStorage class contains an array of writers.
+ *        These writers are parsed from JSON array
+ */
 class WritersStorage
 {
 public:

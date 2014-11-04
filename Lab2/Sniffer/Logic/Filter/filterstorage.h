@@ -9,6 +9,15 @@
 class QJsonArray;
 typedef QVector<Filter> Filters;
 
+/**
+ * @brief The FilterStorage class provides storage for next filters:
+ *            1) raw data
+ *            2) IP packets
+ *            3) ICMP messages
+ *            4) UDP datagrams
+ *            5) TCP streams
+ *        It parses JSON array in ctor to fill internal collections.
+ */
 class FilterStorage
 {
 public:

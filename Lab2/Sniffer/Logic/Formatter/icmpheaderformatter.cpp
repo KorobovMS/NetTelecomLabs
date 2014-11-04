@@ -5,13 +5,13 @@
 ICMPHeaderFormatter::ICMPHeaderFormatter(const ICMPSegment& icmp)
 {
     QTextStream stream(str_, QIODevice::WriteOnly);
-    stream << "Type=" << type << "\n"
-           << "Code=" << code << "\n"
-           << "CRC=" << crc << "\n";
+    stream << "Type: " << icmp.type << "\n"
+           << "Code: " << icmp.code << "\n"
+           << "CRC: " << icmp.crc << "\n";
     stream.flush();
 }
 
-const QString&ICMPHeaderFormatter::GetString() const
+const QString& ICMPHeaderFormatter::GetString() const
 {
     return str_;
 }

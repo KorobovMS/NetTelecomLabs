@@ -12,9 +12,9 @@ IPHeaderFormatter::IPHeaderFormatter(const IPPacket& ip)
            << "Packet length: " << ip.tlen << "\n"
            << "ID: " << ip.id << "\n"
            << "Flags: " <<
-              ((ip.flags_fo >> 15) & 1) << " "
+              ((ip.flags_fo >> 15) & 1) << " " <<
               (((ip.flags_fo >> 14) & 1) ? "DF " : " ") <<
-              (((ip.flags_fo >> 13) & 1) ? "MF" : "" )<< "\n"
+              (((ip.flags_fo >> 13) & 1) ? "MF" : "" ) << "\n"
            << "Fragment offset: " << (ip.flags_fo & 0x1FFF) << "\n"
            << "TTL: " << ip.ttl << "\n"
            << "Protocol: " << ip.proto << "\n"

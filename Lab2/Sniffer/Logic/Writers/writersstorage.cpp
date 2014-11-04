@@ -8,6 +8,27 @@
 #include "filewriter.h"
 #include "stdoutwriter.h"
 
+namespace
+{
+bool GetJSONString(const QJsonObject& obj, const QString& key, QString& value)
+{
+    QJsonObject::const_iterator iter = obj.find(key);
+    if (iter == obj.end())
+    {
+        return false;
+    }
+
+    QJsonValue json_value = iter.value();
+    if (!json_value.isString())
+    {
+        return false;
+    }
+
+    value = json_value.toString();
+    return true;
+}
+}
+
 WritersStorage::WritersStorage(const QJsonArray& array)
 {
     QJsonArray::const_iterator it = array.begin();
@@ -15,29 +36,17 @@ WritersStorage::WritersStorage(const QJsonArray& array)
     {
         QJsonObject writer = (*it).toObject();
 
-        QJsonObject::const_iterator name_it = writer.find("name");
-        if (name_it == writer.end())
+        QString name;
+        if (!GetJSONString(writer, "name", name))
         {
             continue;
         }
-        QJsonValue name_value = name_it.value();
-        if (!name_value.isString())
-        {
-            continue;
-        }
-        QString name = name_value.toString();
 
-        QJsonObject::const_iterator type_it = writer.find("type");
-        if (type_it == writer.end())
+        QString type;
+        if (!GetJSONString(writer, "type", type))
         {
             continue;
         }
-        QJsonValue type_value = type_it.value();
-        if (!type_value.isString())
-        {
-            continue;
-        }
-        QString type = type_value.toString();
 
         if (type == "stdout")
         {
@@ -45,17 +54,11 @@ WritersStorage::WritersStorage(const QJsonArray& array)
         }
         else if (type == "file")
         {
-            QJsonObject::const_iterator filename_it = writer.find("filename");
-            if (filename_it == writer.end())
+            QString filename;
+            if (!GetJSONString(writer, "filename", filename))
             {
                 continue;
             }
-            QJsonValue filename_value = filename_it.value();
-            if (!filename_value.isString())
-            {
-                continue;
-            }
-            QString filename = filename_value.toString();
 
             writers_.insert(name, WriterPtr(new FileWriter(filename)));
         }

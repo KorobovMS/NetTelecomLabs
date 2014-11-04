@@ -4,7 +4,7 @@
 
 UDPHeaderFormatter::UDPHeaderFormatter(const UDPSegment& udp)
 {
-    QTextStream stream(str_, QIODevice::WriteOnly);
+    QTextStream stream(&str_, QIODevice::WriteOnly);
     stream << "Source port: " << udp.src_port << "\n"
            << "Destination port: " << udp.dst_port << "\n"
            << "Length: " << udp.length << "\n"

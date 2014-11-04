@@ -4,7 +4,7 @@
 
 TCPHeaderFormatter::TCPHeaderFormatter(const TCPSegment& tcp)
 {
-    QTextStream stream(str_, QIODevice::WriteOnly);
+    QTextStream stream(&str_, QIODevice::WriteOnly);
     stream << "Source port: " << tcp.src_port << "\n"
            << "Destination port: " << tcp.dst_port << "\n"
            << "Seq: " << tcp.seq_n << "\n"

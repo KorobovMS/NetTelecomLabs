@@ -4,7 +4,7 @@
 
 ICMPHeaderFormatter::ICMPHeaderFormatter(const ICMPSegment& icmp)
 {
-    QTextStream stream(str_, QIODevice::WriteOnly);
+    QTextStream stream(&str_, QIODevice::WriteOnly);
     stream << "Type: " << icmp.type << "\n"
            << "Code: " << icmp.code << "\n"
            << "CRC: " << icmp.crc << "\n";

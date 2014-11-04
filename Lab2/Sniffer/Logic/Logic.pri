@@ -2,7 +2,9 @@ INCLUDEPATH += \
     $$PWD/Filter \
     $$PWD/Listener \
     $$PWD/Data \
-    $$PWD/Parsers
+    $$PWD/Parsers \
+    $$PWD/Formatter \
+    $$PWD/Writers
 
 HEADERS += \
     $$PWD/Filter/filter.h \

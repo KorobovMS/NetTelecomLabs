@@ -19,7 +19,8 @@ HEADERS += \
     $$PWD/Formatter/tcpheaderformatter.h \
     $$PWD/Writers/writer.h \
     $$PWD/Writers/stdoutwriter.h \
-    $$PWD/Writers/filewriter.h
+    $$PWD/Writers/filewriter.h \
+    $$PWD/Writers/writersstorage.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
@@ -30,4 +31,5 @@ SOURCES += \
     $$PWD/Formatter/udpheaderformatter.cpp \
     $$PWD/Formatter/tcpheaderformatter.cpp \
     $$PWD/Writers/stdoutwriter.cpp \
-    $$PWD/Writers/filewriter.cpp
+    $$PWD/Writers/filewriter.cpp \
+    $$PWD/Writers/writersstorage.cpp

@@ -8,12 +8,10 @@
 
 #include "ippacket.h"
 
-class Filter : public QObject
+class Filter
 {
-    Q_OBJECT
-
 public:
-    explicit Filter(QObject* parent = 0);
+    Filter();
 
     bool Apply(const IPPacket& packet) const;
     bool IsRawApplied() const;

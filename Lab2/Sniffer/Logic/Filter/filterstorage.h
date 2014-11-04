@@ -13,9 +13,9 @@ class FilterStorage
 {
 public:
     FilterStorage(const QJsonArray& array);
-    const Filters& GetRawFilters() const;
-    const Filters& GetIPFilters() const;
-    const Filters& GetProtocolFilters(quint8 protocol) const;
+    Filters GetRawFilters() const;
+    Filters GetIPFilters() const;
+    Filters GetProtocolFilters(quint8 protocol) const;
 
 private:
     QHash<quint8, Filters> protocol_to_filters_;

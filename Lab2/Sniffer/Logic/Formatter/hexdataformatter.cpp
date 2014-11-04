@@ -9,13 +9,19 @@ HexDataFormatter::HexDataFormatter(const QByteArray& data)
     QTextStream stream(&str_, QIODevice::WriteOnly);
     for (QByteArray::const_iterator it = data.begin(); it != data.end(); ++it)
     {
-        stream << QString("%1 ").arg(*it);
+        stream << QString("%1 ")
+                  .arg(static_cast<quint8>(*it), 2, 16, QChar('0'))
+                  .toUpper();
         ++number_in_raw;
         if (number_in_raw == max_number_in_raw)
         {
             number_in_raw = 0;
             stream << "\n";
         }
+    }
+    if (number_in_raw != 0)
+    {
+        stream << "\n";
     }
     stream.flush();
 }

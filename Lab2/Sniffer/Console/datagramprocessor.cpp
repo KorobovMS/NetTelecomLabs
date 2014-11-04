@@ -1,6 +1,7 @@
 #include "datagramprocessor.h"
 
 #include <QFile>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
@@ -24,17 +25,24 @@ DatagramProcessor::DatagramProcessor() :
     if (file.open(QIODevice::ReadOnly))
     {
         QJsonParseError error;
-        QJsonObject settings = QJsonDocument::fromJson(file.readAll(), &error);
+        QJsonDocument doc = QJsonDocument::fromJson(file.readAll(), &error);
         if (error.error == QJsonParseError::NoError)
         {
-            writers_ = new WritersStorage(settings["writers"]);
-            filters_ = new FilterStorage(settings["filters"]);
+            QJsonObject settings = doc.object();
+            writers_ = new WritersStorage(settings["writers"].toArray());
+            filters_ = new FilterStorage(settings["filters"].toArray());
         }
     }
 }
 
 void DatagramProcessor::Process(const QByteArray& datagram)
 {
+    if (writers_ == 0 || filters_ == 0)
+    {
+        qDebug() << "Writers or filters are nullptr";
+        return;
+    }
+
     const Filters& raw_filters = filters_->GetRawFilters();
     if (raw_filters.size() != 0)
     {
@@ -44,7 +52,7 @@ void DatagramProcessor::Process(const QByteArray& datagram)
         {
             if (it->IsRawApplied())
             {
-                writers_->Write(it->GetWriter(), formatter.GetString());
+                writers_->Write(it->GetWriter(), formatter.GetString() + "\n");
             }
         }
     }
@@ -56,7 +64,7 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     if (ip_filters.size() != 0)
     {
         HexDataFormatter ip_data_formatter(ip.data);
-        QString to_file = ip_header + "\n" + ip_data_formatter.GetString();
+        QString to_file = ip_header + ip_data_formatter.GetString() + "\n";
         Filters::const_iterator it = ip_filters.begin();
         for (; it != ip_filters.end(); ++it)
         {
@@ -78,6 +86,7 @@ void DatagramProcessor::Process(const QByteArray& datagram)
         HexDataFormatter df(icmp.data);
         to_file += hf.GetString();
         to_file += df.GetString();
+        to_file += "\n";
         break;
     }
 
@@ -88,6 +97,7 @@ void DatagramProcessor::Process(const QByteArray& datagram)
         AsciiDataFormatter df(tcp.data);
         to_file += hf.GetString();
         to_file += df.GetString();
+        to_file += "\n";
         break;
     }
 
@@ -98,6 +108,7 @@ void DatagramProcessor::Process(const QByteArray& datagram)
         HexDataFormatter df(udp.data);
         to_file += hf.GetString();
         to_file += df.GetString();
+        to_file += "\n";
         break;
     }
     }

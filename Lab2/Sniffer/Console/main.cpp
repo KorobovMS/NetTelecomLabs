@@ -9,8 +9,9 @@
 #include "winsock.h"
 #include "datagramprocessor.h"
 
-int main(int argc, char *argv[])
+int main()
 {
+    DatagramProcessor processor;
     WinSock ws;
     if (!ws.IsInitialized())
     {
@@ -25,7 +26,6 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    DatagramProcessor processor;
     while (!kbhit())
     {
         QByteArray datagram = listener.Receive();

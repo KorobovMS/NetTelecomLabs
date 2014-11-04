@@ -41,6 +41,7 @@ FilterStorage::FilterStorage(const QJsonArray& array)
 
         if (type == "raw")
         {
+            filter.SetRawFormat();
             raw_filters_.append(filter);
         }
         else if (type == "ip")
@@ -62,17 +63,17 @@ FilterStorage::FilterStorage(const QJsonArray& array)
     }
 }
 
-const Filters&FilterStorage::GetRawFilters() const
+Filters FilterStorage::GetRawFilters() const
 {
     return raw_filters_;
 }
 
-const Filters&FilterStorage::GetIPFilters() const
+Filters FilterStorage::GetIPFilters() const
 {
     return ip_filters_;
 }
 
-const Filters&FilterStorage::GetProtocolFilters(quint8 protocol) const
+Filters FilterStorage::GetProtocolFilters(quint8 protocol) const
 {
     return protocol_to_filters_[protocol];
 }

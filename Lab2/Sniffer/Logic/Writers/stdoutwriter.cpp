@@ -9,4 +9,5 @@ StdoutWriter::StdoutWriter() :
 void StdoutWriter::Write(const QString& str)
 {
     stdout_ << str;
+    stdout_.flush();
 }

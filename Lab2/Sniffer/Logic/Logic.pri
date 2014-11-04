@@ -15,7 +15,8 @@ HEADERS += \
     $$PWD/Formatter/formatter.h \
     $$PWD/Formatter/ipheaderformatter.h \
     $$PWD/Formatter/icmpheaderformatter.h \
-    $$PWD/Formatter/udpheaderformatter.h
+    $$PWD/Formatter/udpheaderformatter.h \
+    $$PWD/Formatter/tcpheaderformatter.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
@@ -23,4 +24,5 @@ SOURCES += \
     $$PWD/Parsers/parsers.cpp \
     $$PWD/Formatter/ipheaderformatter.cpp \
     $$PWD/Formatter/icmpheaderformatter.cpp \
-    $$PWD/Formatter/udpheaderformatter.cpp
+    $$PWD/Formatter/udpheaderformatter.cpp \
+    $$PWD/Formatter/tcpheaderformatter.cpp

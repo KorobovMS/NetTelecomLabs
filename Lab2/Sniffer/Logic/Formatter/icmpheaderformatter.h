@@ -1,0 +1,18 @@
+#ifndef ICMPHEADERFORMATTER_H
+#define ICMPHEADERFORMATTER_H
+
+#include <QString>
+#include "formatter.h"
+#include "icmpsegment.h"
+
+class ICMPHeaderFormatter : public Formatter
+{
+public:
+    ICMPHeaderFormatter(const ICMPSegment& icmp);
+    const QString& GetString() const;
+
+private:
+    QString str_;
+};
+
+#endif // ICMPHEADERFORMATTER_H

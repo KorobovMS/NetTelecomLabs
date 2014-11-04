@@ -21,6 +21,7 @@ IPHeaderFormatter::IPHeaderFormatter(const IPPacket& ip)
            << "CRC=" << hex << ip.crc << "\n"
            << "Source=" << QHostAddress(ip.src_addr).toString() << "\n"
            << "Destination=" << QHostAddress(ip.dst_addr).toString() << "\n";
+    stream.flush();
 }
 
 const QString&IPHeaderFormatter::GetString() const

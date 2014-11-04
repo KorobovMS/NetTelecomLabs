@@ -29,9 +29,10 @@ int main(int argc, char *argv[])
     {
         QByteArray datagram = listener.Receive();
         IPPacket ip = ParseIP(datagram);
-        qDebug() << QHostAddress(ip.src_addr)
-                 << QHostAddress(ip.dst_addr)
-                 << ip.proto;
+        qDebug() << QHostAddress(ip.dst_addr)
+                 << ip.proto
+                 << QString("%1").arg(ip.flags_fo >> 13, 3, 2, QChar('0'))
+                 << ip.tlen;
     }
 
     return 0;

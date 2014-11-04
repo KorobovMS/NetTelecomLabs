@@ -11,9 +11,12 @@ HEADERS += \
     $$PWD/Data/ippacket.h \
     $$PWD/Data/tcpsegment.h \
     $$PWD/Data/icmpsegment.h \
-    $$PWD/Data/udpsegment.h
+    $$PWD/Data/udpsegment.h \
+    $$PWD/Formatter/formatter.h \
+    $$PWD/Formatter/ipheaderformatter.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
     $$PWD/Listener/listener.cpp \
-    $$PWD/Parsers/parsers.cpp
+    $$PWD/Parsers/parsers.cpp \
+    $$PWD/Formatter/ipheaderformatter.cpp

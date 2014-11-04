@@ -1,7 +1,6 @@
 #ifndef ICMPHEADERFORMATTER_H
 #define ICMPHEADERFORMATTER_H
 
-#include <QString>
 #include "formatter.h"
 #include "icmpsegment.h"
 

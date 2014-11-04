@@ -2,8 +2,6 @@
 #define FILTER_H
 
 #include <QHostAddress>
-#include <QObject>
-#include <QSet>
 #include <QString>
 
 #include "ippacket.h"

@@ -1,7 +1,6 @@
 #ifndef ASCIIDATAFORMATTER_H
 #define ASCIIDATAFORMATTER_H
 
-#include <QString>
 #include "formatter.h"
 
 class AsciiDataFormatter : public Formatter

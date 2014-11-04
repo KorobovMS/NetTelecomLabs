@@ -1,7 +1,6 @@
 #ifndef UDPHEADERFORMATTER_H
 #define UDPHEADERFORMATTER_H
 
-#include <QString>
 #include "formatter.h"
 #include "udpsegment.h"
 

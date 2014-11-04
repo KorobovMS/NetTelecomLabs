@@ -1,6 +1,5 @@
 #include "jsonutils.h"
 
-#include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
 

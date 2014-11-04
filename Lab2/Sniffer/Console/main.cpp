@@ -1,11 +1,7 @@
 #include <conio.h>
-#include <cstring>
 #include <cstdio>
 
-#include <QHostAddress>
-
 #include "listener.h"
-#include "parsers.h"
 #include "winsock.h"
 #include "datagramprocessor.h"
 

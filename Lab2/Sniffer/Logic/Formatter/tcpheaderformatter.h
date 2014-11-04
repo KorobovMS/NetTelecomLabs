@@ -1,7 +1,6 @@
 #ifndef TCPHEADERFORMATTER_H
 #define TCPHEADERFORMATTER_H
 
-#include <QString>
 #include "formatter.h"
 #include "tcpsegment.h"
 

@@ -1,8 +1,6 @@
 #ifndef IPHEADERFORMATTER_H
 #define IPHEADERFORMATTER_H
 
-#include <QString>
-
 #include "formatter.h"
 #include "ippacket.h"
 

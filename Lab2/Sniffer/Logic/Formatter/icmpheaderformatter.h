@@ -9,7 +9,7 @@ class ICMPHeaderFormatter : public Formatter
 {
 public:
     ICMPHeaderFormatter(const ICMPSegment& icmp);
-    const QString& GetString() const;
+    virtual const QString& GetString() const;
 
 private:
     QString str_;

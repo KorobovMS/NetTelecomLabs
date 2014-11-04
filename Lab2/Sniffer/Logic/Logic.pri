@@ -16,7 +16,10 @@ HEADERS += \
     $$PWD/Formatter/ipheaderformatter.h \
     $$PWD/Formatter/icmpheaderformatter.h \
     $$PWD/Formatter/udpheaderformatter.h \
-    $$PWD/Formatter/tcpheaderformatter.h
+    $$PWD/Formatter/tcpheaderformatter.h \
+    $$PWD/Writers/writer.h \
+    $$PWD/Writers/stdoutwriter.h \
+    $$PWD/Writers/filewriter.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
@@ -25,4 +28,6 @@ SOURCES += \
     $$PWD/Formatter/ipheaderformatter.cpp \
     $$PWD/Formatter/icmpheaderformatter.cpp \
     $$PWD/Formatter/udpheaderformatter.cpp \
-    $$PWD/Formatter/tcpheaderformatter.cpp
+    $$PWD/Formatter/tcpheaderformatter.cpp \
+    $$PWD/Writers/stdoutwriter.cpp \
+    $$PWD/Writers/filewriter.cpp

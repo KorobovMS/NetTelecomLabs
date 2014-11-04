@@ -8,17 +8,12 @@ Filter::Filter(QObject* parent) :
 
 bool Filter::Apply(const IPPacket& packet) const
 {
-    if (!protocols_.empty() && !protocols_.contains(packet.proto))
+    if (!from_.isNull() && from_ != QHostAddress(packet.src_addr))
     {
         return false;
     }
 
-    if (!from_.empty() && !from_.contains(QHostAddress(packet.src_addr)))
-    {
-        return false;
-    }
-
-    if (!to_.empty() && !to_.contains(QHostAddress(packet.dst_addr)))
+    if (!to_.isNull() && to_ != QHostAddress(packet.dst_addr))
     {
         return false;
     }
@@ -31,22 +26,27 @@ bool Filter::IsRawApplied() const
     return is_raw_applied_;
 }
 
-void Filter::AddProtocol(quint8 protocol)
+const QString& Filter::GetWriter() const
 {
-    protocols_.insert(protocol);
+    return writer_;
 }
 
-void Filter::AddFrom(const QHostAddress& from)
+void Filter::SetFrom(const QHostAddress& from)
 {
-    from_.insert(from);
+    from_ = from;
 }
 
-void Filter::AddTo(const QHostAddress& to)
+void Filter::SetTo(const QHostAddress& to)
 {
-    to_.insert(to);
+    to_ = to;
 }
 
-void Filter::AddRawFormat()
+void Filter::SetRawFormat()
 {
     is_raw_applied_ = true;
+}
+
+void Filter::SetWriter(const QString& writer)
+{
+    writer_ = writer;
 }

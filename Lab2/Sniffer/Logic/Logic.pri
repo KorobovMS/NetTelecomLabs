@@ -4,7 +4,8 @@ INCLUDEPATH += \
     $$PWD/Data \
     $$PWD/Parsers \
     $$PWD/Formatter \
-    $$PWD/Writers
+    $$PWD/Writers \
+    $$PWD/JSONUtils
 
 HEADERS += \
     $$PWD/Filter/filter.h \
@@ -22,7 +23,11 @@ HEADERS += \
     $$PWD/Writers/writer.h \
     $$PWD/Writers/stdoutwriter.h \
     $$PWD/Writers/filewriter.h \
-    $$PWD/Writers/writersstorage.h
+    $$PWD/Writers/writersstorage.h \
+    $$PWD/Filter/filterstorage.h \
+    $$PWD/JSONUtils/jsonutils.h \
+    $$PWD/Formatter/hexdataformatter.h \
+    $$PWD/Formatter/asciidataformatter.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
@@ -34,4 +39,8 @@ SOURCES += \
     $$PWD/Formatter/tcpheaderformatter.cpp \
     $$PWD/Writers/stdoutwriter.cpp \
     $$PWD/Writers/filewriter.cpp \
-    $$PWD/Writers/writersstorage.cpp
+    $$PWD/Writers/writersstorage.cpp \
+    $$PWD/Filter/filterstorage.cpp \
+    $$PWD/JSONUtils/jsonutils.cpp \
+    $$PWD/Formatter/hexdataformatter.cpp \
+    $$PWD/Formatter/asciidataformatter.cpp

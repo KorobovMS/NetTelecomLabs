@@ -17,19 +17,17 @@ public:
 
     bool Apply(const IPPacket& packet) const;
     bool IsRawApplied() const;
+    const QString& GetWriter() const;
 
-    void AddProtocol(quint8 protocol);
-    void AddFrom(const QHostAddress& from);
-    void AddTo(const QHostAddress& to);
-    void AddRawFormat();
+    void SetFrom(const QHostAddress& from);
+    void SetTo(const QHostAddress& to);
+    void SetRawFormat();
+    void SetWriter(const QString& writer);
 
 private:
-    typedef QSet<quint8> Protocols;
-    typedef QSet<QHostAddress> Addresses;
-
-    Protocols protocols_;
-    Addresses from_;
-    Addresses to_;
+    QHostAddress from_;
+    QHostAddress to_;
+    QString writer_;
     bool is_raw_applied_;
 };
 

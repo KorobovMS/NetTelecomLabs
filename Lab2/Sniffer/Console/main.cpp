@@ -4,10 +4,10 @@
 
 #include <QHostAddress>
 
-#include "ippacket.h"
 #include "listener.h"
 #include "parsers.h"
 #include "winsock.h"
+#include "datagramprocessor.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,14 +25,11 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    DatagramProcessor processor;
     while (!kbhit())
     {
         QByteArray datagram = listener.Receive();
-        IPPacket ip = ParseIP(datagram);
-        qDebug() << QHostAddress(ip.dst_addr)
-                 << ip.proto
-                 << QString("%1").arg(ip.flags_fo >> 13, 3, 2, QChar('0'))
-                 << ip.tlen;
+        processor.Process(datagram);
     }
 
     return 0;

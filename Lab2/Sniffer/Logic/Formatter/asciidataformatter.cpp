@@ -1,8 +1,8 @@
 #include "asciidataformatter.h"
 
-AsciiDataFormatter::AsciiDataFormatter(const QByteArray& data)
+AsciiDataFormatter::AsciiDataFormatter(const QByteArray& data) :
+    str_(data)
 {
-    str_ = QString::fromLatin1(data);
     str_ += "\n";
 }
 

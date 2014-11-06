@@ -18,7 +18,7 @@ IPHeaderFormatter::IPHeaderFormatter(const IPPacket& ip)
            << "Fragment offset: " << (ip.flags_fo & 0x1FFF) << "\n"
            << "TTL: " << ip.ttl << "\n"
            << "Protocol: " << ip.proto << "\n"
-           << "CRC: " << QString("0x%1").arg(ip.crc, 0, 16) << "\n"
+           << "CRC: " << ip.crc << "\n"
            << "Source: " << QHostAddress(ip.src_addr).toString() << "\n"
            << "Destination: " << QHostAddress(ip.dst_addr).toString() << "\n";
     stream.flush();

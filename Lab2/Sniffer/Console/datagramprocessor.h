@@ -2,6 +2,7 @@
 #define DATAGRAMPROCESSOR_H
 
 class QByteArray;
+class QString;
 class WritersStorage;
 class FilterStorage;
 
@@ -13,10 +14,12 @@ class DatagramProcessor
 {
 public:
     DatagramProcessor();
+    bool Initialize(const QString& settings_file);
     void Process(const QByteArray& datagram);
     ~DatagramProcessor();
 
 private:
+    bool is_initialized_;
     WritersStorage* writers_;
     FilterStorage* filters_;
 };

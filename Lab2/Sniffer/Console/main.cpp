@@ -22,6 +22,12 @@ int main()
     }
 
     DatagramProcessor processor;
+    if (!processor.Initialize("settings.json"))
+    {
+        printf("Cannot open or parse settings file\n");
+        return 3;
+    }
+
     while (!kbhit())
     {
         QByteArray datagram = listener.Receive();

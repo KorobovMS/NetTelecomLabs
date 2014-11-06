@@ -19,9 +19,18 @@
 
 DatagramProcessor::DatagramProcessor() :
     writers_(0),
-    filters_(0)
+    filters_(0),
+    is_initialized_(false)
+{}
+
+bool DatagramProcessor::Initialize(const QString& settings_file)
 {
-    QFile file("settings.json");
+    if (is_initialized_)
+    {
+        return is_initialized_;
+    }
+
+    QFile file(settings_file);
     if (file.open(QIODevice::ReadOnly))
     {
         QJsonParseError error;
@@ -31,15 +40,17 @@ DatagramProcessor::DatagramProcessor() :
             QJsonObject settings = doc.object();
             writers_ = new WritersStorage(settings["writers"].toArray());
             filters_ = new FilterStorage(settings["filters"].toArray());
+            is_initialized_ = true;
         }
     }
+    return is_initialized_;
 }
 
 void DatagramProcessor::Process(const QByteArray& datagram)
 {
-    if (writers_ == 0 || filters_ == 0)
+    if (!is_initialized_)
     {
-        qDebug() << "Writers or filters are nullptr";
+        qDebug() << "Datagram processor is not initialized correctly";
         return;
     }
 

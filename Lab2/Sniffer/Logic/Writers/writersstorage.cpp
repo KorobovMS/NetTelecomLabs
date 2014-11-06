@@ -8,6 +8,8 @@
 #include "filewriter.h"
 #include "stdoutwriter.h"
 #include "jsonutils.h"
+#include "hexdataformatter.h"
+#include "asciidataformatter.h"
 
 WritersStorage::WritersStorage(const QJsonArray& array)
 {
@@ -28,9 +30,25 @@ WritersStorage::WritersStorage(const QJsonArray& array)
             continue;
         }
 
+        QString format_string;
+        if (!GetJSONString(writer, "format", format_string))
+        {
+            format_string = "hex";
+        }
+        ByteArrayFormatterPtr fmt;
+        if (format_string == "ascii")
+        {
+            fmt = ByteArrayFormatterPtr(new AsciiDataFormatter);
+        }
+        else
+        {
+            fmt = ByteArrayFormatterPtr(new HexDataFormatter);
+        }
+
+
         if (type == "stdout")
         {
-            writers_.insert(name, WriterPtr(new StdoutWriter));
+            writers_.insert(name, WriterPtr(new StdoutWriter(fmt)));
         }
         else if (type == "file")
         {
@@ -40,16 +58,25 @@ WritersStorage::WritersStorage(const QJsonArray& array)
                 continue;
             }
 
-            writers_.insert(name, WriterPtr(new FileWriter(filename)));
+            writers_.insert(name, WriterPtr(new FileWriter(filename, fmt)));
         }
     }
 }
 
-void WritersStorage::Write(const QString& name, const QString& str)
+void WritersStorage::WriteString(const QString& name, const QString& str)
 {
     WritersCollection::iterator it = writers_.find(name);
     if (it != writers_.end())
     {
-        it.value()->Write(str);
+        it.value()->WriteString(str);
+    }
+}
+
+void WritersStorage::WriteBytes(const QString& name, const QByteArray& arr)
+{
+    WritersCollection::iterator it = writers_.find(name);
+    if (it != writers_.end())
+    {
+        it.value()->WriteBytes(arr);
     }
 }

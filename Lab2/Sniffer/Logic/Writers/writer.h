@@ -1,6 +1,7 @@
 #ifndef WRITER_H
 #define WRITER_H
 
+#include <QByteArray>
 #include <QString>
 
 /**
@@ -9,7 +10,8 @@
 class Writer
 {
 public:
-    virtual void Write(const QString& str) = 0;
+    virtual void WriteString(const QString& str) = 0;
+    virtual void WriteBytes(const QByteArray& arr) = 0;
     virtual ~Writer() {}
 };
 

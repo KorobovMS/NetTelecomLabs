@@ -27,7 +27,9 @@ HEADERS += \
     $$PWD/Filter/filterstorage.h \
     $$PWD/JSONUtils/jsonutils.h \
     $$PWD/Formatter/hexdataformatter.h \
-    $$PWD/Formatter/asciidataformatter.h
+    $$PWD/Formatter/asciidataformatter.h \
+    $$PWD/Writers/formattedwriter.h \
+    $$PWD/Formatter/bytearrayformatter.h
 
 SOURCES += \
     $$PWD/Filter/filter.cpp \
@@ -43,4 +45,5 @@ SOURCES += \
     $$PWD/Filter/filterstorage.cpp \
     $$PWD/JSONUtils/jsonutils.cpp \
     $$PWD/Formatter/hexdataformatter.cpp \
-    $$PWD/Formatter/asciidataformatter.cpp
+    $$PWD/Formatter/asciidataformatter.cpp \
+    $$PWD/Writers/formattedwriter.cpp

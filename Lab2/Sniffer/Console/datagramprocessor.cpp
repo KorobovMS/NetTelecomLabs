@@ -8,19 +8,17 @@
 
 #include "writersstorage.h"
 #include "filterstorage.h"
-#include "hexdataformatter.h"
 #include "ipheaderformatter.h"
 #include "icmpheaderformatter.h"
 #include "udpheaderformatter.h"
 #include "tcpheaderformatter.h"
-#include "asciidataformatter.h"
 #include "ippacket.h"
 #include "parsers.h"
 
 DatagramProcessor::DatagramProcessor() :
+    is_initialized_(false),
     writers_(0),
-    filters_(0),
-    is_initialized_(false)
+    filters_(0)
 {}
 
 bool DatagramProcessor::Initialize(const QString& settings_file)
@@ -57,13 +55,13 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     const Filters& raw_filters = filters_->GetRawFilters();
     if (raw_filters.size() != 0)
     {
-        HexDataFormatter formatter(datagram);
         Filters::const_iterator it = raw_filters.begin();
         for (; it != raw_filters.end(); ++it)
         {
             if (it->IsRawApplied())
             {
-                writers_->Write(it->GetWriter(), formatter.GetString() + "\n");
+                writers_->WriteBytes(it->GetWriter(), datagram);
+                writers_->WriteString(it->GetWriter(), "\n");
             }
         }
     }
@@ -74,30 +72,30 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     const Filters& ip_filters = filters_->GetIPFilters();
     if (ip_filters.size() != 0)
     {
-        HexDataFormatter ip_data_formatter(ip.data);
-        QString to_file = ip_header + ip_data_formatter.GetString() + "\n";
         Filters::const_iterator it = ip_filters.begin();
         for (; it != ip_filters.end(); ++it)
         {
             if (it->Apply(ip))
             {
-                writers_->Write(it->GetWriter(), to_file);
+                writers_->WriteString(it->GetWriter(), ip_header);
+                writers_->WriteBytes(it->GetWriter(), ip.data);
+                writers_->WriteString(it->GetWriter(), "\n");
             }
         }
     }
 
     const Filters& protocol_filters = filters_->GetProtocolFilters(ip.proto);
     QString to_file = ip_header;
+    QString proto_header;
+    QByteArray proto_data;
     switch (ip.proto)
     {
     case Protocols::ICMP:
     {
         ICMPSegment icmp = ParseICMP(ip.data);
         ICMPHeaderFormatter hf(icmp);
-        HexDataFormatter df(icmp.data);
-        to_file += hf.GetString();
-        to_file += df.GetString();
-        to_file += "\n";
+        proto_header = hf.GetString();
+        proto_data = icmp.data;
         break;
     }
 
@@ -105,10 +103,8 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     {
         TCPSegment tcp = ParseTCP(ip.data);
         TCPHeaderFormatter hf(tcp);
-        AsciiDataFormatter df(tcp.data);
-        to_file += hf.GetString();
-        to_file += df.GetString();
-        to_file += "\n";
+        proto_header = hf.GetString();
+        proto_data = tcp.data;
         break;
     }
 
@@ -116,13 +112,15 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     {
         UDPSegment udp = ParseUDP(ip.data);
         UDPHeaderFormatter hf(udp);
-        HexDataFormatter df(udp.data);
-        to_file += hf.GetString();
-        to_file += df.GetString();
-        to_file += "\n";
+        proto_header = hf.GetString();
+        proto_data = udp.data;
         break;
     }
+
+    default:
+        return;
     }
+
     if (protocol_filters.size() != 0)
     {
         Filters::const_iterator it = protocol_filters.begin();
@@ -130,7 +128,10 @@ void DatagramProcessor::Process(const QByteArray& datagram)
         {
             if (it->Apply(ip))
             {
-                writers_->Write(it->GetWriter(), to_file);
+                writers_->WriteString(it->GetWriter(), ip_header);
+                writers_->WriteString(it->GetWriter(), proto_header);
+                writers_->WriteBytes(it->GetWriter(), proto_data);
+                writers_->WriteString(it->GetWriter(), "\n");
             }
         }
     }

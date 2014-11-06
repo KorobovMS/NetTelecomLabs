@@ -1,16 +1,17 @@
 #ifndef ASCIIDATAFORMATTER_H
 #define ASCIIDATAFORMATTER_H
 
-#include "formatter.h"
+#include "bytearrayformatter.h"
 
 /**
  * @brief The AsciiDataFormatter class converts QByteArray to ascii string
  */
-class AsciiDataFormatter : public Formatter
+class AsciiDataFormatter : public ByteArrayFormatter
 {
 public:
-    AsciiDataFormatter(const QByteArray& data);
+    AsciiDataFormatter(const QByteArray& data = QByteArray());
     virtual const QString& GetString() const;
+    virtual void SetData(const QByteArray& data);
 
 private:
     QString str_;

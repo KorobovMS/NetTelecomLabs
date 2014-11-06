@@ -2,16 +2,17 @@
 #define STDOUTWRITER_H
 
 #include <QTextStream>
-#include "writer.h"
+#include "formattedwriter.h"
+#include "bytearrayformatter.h"
 
 /**
  * @brief The StdoutWriter class writes string to stdout
  */
-class StdoutWriter : public Writer
+class StdoutWriter : public FormattedWriter
 {
 public:
-    StdoutWriter();
-    virtual void Write(const QString& str);
+    StdoutWriter(ByteArrayFormatterPtr fmt);
+    virtual void WriteString(const QString& str);
 
 private:
     QTextStream stdout_;

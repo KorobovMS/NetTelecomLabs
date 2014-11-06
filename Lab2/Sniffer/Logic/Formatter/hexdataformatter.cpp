@@ -4,8 +4,19 @@
 
 HexDataFormatter::HexDataFormatter(const QByteArray& data)
 {
+    SetData(data);
+}
+
+const QString&HexDataFormatter::GetString() const
+{
+    return str_;
+}
+
+void HexDataFormatter::SetData(const QByteArray& data)
+{
     const int max_number_in_raw = 16;
     int number_in_raw = 0;
+    str_.clear();
     QTextStream stream(&str_, QIODevice::WriteOnly);
     for (QByteArray::const_iterator it = data.begin(); it != data.end(); ++it)
     {
@@ -28,9 +39,4 @@ HexDataFormatter::HexDataFormatter(const QByteArray& data)
         stream << "\n";
     }
     stream.flush();
-}
-
-const QString&HexDataFormatter::GetString() const
-{
-    return str_;
 }

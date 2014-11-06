@@ -17,7 +17,8 @@ class WritersStorage
 {
 public:
     WritersStorage(const QJsonArray& array);
-    void Write(const QString& name, const QString& str);
+    void WriteString(const QString& name, const QString& str);
+    void WriteBytes(const QString& name, const QByteArray& arr);
 
 private:
     typedef QHash<QString, WriterPtr> WritersCollection;

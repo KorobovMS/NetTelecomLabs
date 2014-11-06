@@ -1,6 +1,7 @@
 #include "filewriter.h"
 
-FileWriter::FileWriter(const QString& path) :
+FileWriter::FileWriter(const QString& path, ByteArrayFormatterPtr fmt) :
+    FormattedWriter(fmt),
     file_(path)
 {
     if (file_.open(QIODevice::Append | QIODevice::Text))
@@ -9,7 +10,7 @@ FileWriter::FileWriter(const QString& path) :
     }
 }
 
-void FileWriter::Write(const QString& str)
+void FileWriter::WriteString(const QString& str)
 {
     stream_ << str;
 }

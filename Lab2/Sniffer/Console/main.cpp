@@ -1,6 +1,8 @@
 #include <conio.h>
 #include <cstdio>
 
+#include <QString>
+
 #include "listener.h"
 #include "winsock.h"
 #include "datagramprocessor.h"
@@ -22,7 +24,7 @@ int main()
     }
 
     DatagramProcessor processor;
-    if (!processor.Initialize("settings.json"))
+    if (!processor.Initialize(QString("settings.json")))
     {
         printf("Cannot open or parse settings file\n");
         return 3;

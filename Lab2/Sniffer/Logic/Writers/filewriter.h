@@ -3,16 +3,16 @@
 
 #include <QFile>
 #include <QTextStream>
-#include "writer.h"
+#include "formattedwriter.h"
 
 /**
  * @brief The FileWriter class writes string to file specified in ctor
  */
-class FileWriter : public Writer
+class FileWriter : public FormattedWriter
 {
 public:
-    FileWriter(const QString& path);
-    virtual void Write(const QString& str);
+    FileWriter(const QString& path, ByteArrayFormatterPtr fmt);
+    virtual void WriteString(const QString& str);
 
 private:
     QFile file_;

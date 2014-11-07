@@ -85,7 +85,6 @@ void DatagramProcessor::Process(const QByteArray& datagram)
     }
 
     const Filters& protocol_filters = filters_->GetProtocolFilters(ip.proto);
-    QString to_file = ip_header;
     QString proto_header;
     QByteArray proto_data;
     switch (ip.proto)
